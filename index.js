@@ -56,7 +56,7 @@ app.post('/stats', function(req, res) {
 	//   .catch(e => console.log(e));
 })
 
-var server = app.listen(3000, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
   var port = server.address().port
   console.log('Slack Raid Reporter listening on localhost:%s', port)
 })
