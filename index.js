@@ -22,14 +22,20 @@ app.post('/api/raid', function(req, res) {
 	traveler.searchDestinyPlayer('2', username)
     .then((player) => {
     	if (player.Response.length === 0) {
-    		res.send(JSON.stringify('there was an error'))
+    		res.send(JSON.stringify({
+    			response_type: 'in_channel',
+    			text: util.format('Couldn\'t find the user %s on PSN', username)
+    		}))
     	} else {
 	    	const membershipId = player.Response[0].membershipId
 	    	traveler.getProfile('2', membershipId, { components: 100 })
 	    		.then((profile) => {
 	    			const characterIds = profile.Response.profile.data.characterIds
 
-	    			res.send(JSON.stringify(characterIds))
+	    			res.send(JSON.stringify({
+	    				response_type: 'in_channel',
+	    				text: characterIds[0]
+	    			}))
 	    		})
     	}
     })
