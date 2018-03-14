@@ -14,31 +14,37 @@ const traveler = new Traveler({
   userAgent: 'slack'
 });
 
+function respondToSlackRequest(response, text) {
+	response.send(JSON.stringify({
+		response_type: 'in_channel',
+		text: text
+	}))
+}
+
 app.post('/api/raid', function(req, res) {
 	res.setHeader('Content-Type', 'application/json')
 
-	const username = req.body.text
+	res.send({
+		response_type: 'in_channel',
+		text: JSON.stringify(req.body)
+	})
 
-	traveler.searchDestinyPlayer('2', username)
-    .then((player) => {
-    	if (player.Response.length === 0) {
-    		res.send(JSON.stringify({
-    			response_type: 'in_channel',
-    			text: util.format('Couldn\'t find the user %s on PSN', username)
-    		}))
-    	} else {
-	    	const membershipId = player.Response[0].membershipId
-	    	traveler.getProfile('2', membershipId, { components: 100 })
-	    		.then((profile) => {
-	    			const characterIds = profile.Response.profile.data.characterIds
+	// const username = req.body.text
 
-	    			res.send(JSON.stringify({
-	    				response_type: 'in_channel',
-	    				text: characterIds[0]
-	    			}))
-	    		})
-    	}
-    })
+	// traveler.searchDestinyPlayer('2', username)
+ //    .then((player) => {
+ //    	if (player.Response.length === 0) {
+ //    		respondToSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
+ //    	} else {
+	//     	const membershipId = player.Response[0].membershipId
+	//     	traveler.getProfile('2', membershipId, { components: 100 })
+	//     		.then((profile) => {
+	//     			const characterIds = profile.Response.profile.data.characterIds
+
+	//     			respondToSlackRequest(res, characterIds[0])
+	//     		})
+ //    	}
+ //    })
 
  
 	
