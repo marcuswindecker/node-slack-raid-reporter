@@ -47,7 +47,7 @@ app.post('/api/raid', function(req, res) {
                 {
                   json: {
                     response_type: 'in_channel',
-                    text: characterIds[i]
+                    text: 'test' + i
                   }
                 }
               )
