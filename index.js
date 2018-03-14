@@ -3,6 +3,7 @@ const Traveler = require('the-traveler').default
 const Enums = require('the-traveler/build/enums')
 const bodyParser = require('body-parser')
 const util = require('util')
+const request = require('request')
 const express = require('express')
 const app = express()
 
@@ -14,7 +15,7 @@ const traveler = new Traveler({
   userAgent: 'slack'
 });
 
-function respondToSlackRequest(response, text) {
+function respondToInitialSlackRequest(response, text) {
 	response.send(JSON.stringify({
 		response_type: 'in_channel',
 		text: text
@@ -24,27 +25,28 @@ function respondToSlackRequest(response, text) {
 app.post('/api/raid', function(req, res) {
 	res.setHeader('Content-Type', 'application/json')
 
-	res.send({
-		response_type: 'in_channel',
-		text: JSON.stringify(req.body)
-	})
+	const username = req.body.text
+	const delayedResponseUrl = req.body.response_url
 
-	// const username = req.body.text
+	traveler.searchDestinyPlayer('2', username)
+    .then((player) => {
+    	if (player.Response.length === 0) {
+    		respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
+    	} else {
+    		respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...', username))
 
-	// traveler.searchDestinyPlayer('2', username)
- //    .then((player) => {
- //    	if (player.Response.length === 0) {
- //    		respondToSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
- //    	} else {
-	//     	const membershipId = player.Response[0].membershipId
-	//     	traveler.getProfile('2', membershipId, { components: 100 })
-	//     		.then((profile) => {
-	//     			const characterIds = profile.Response.profile.data.characterIds
-
-	//     			respondToSlackRequest(res, characterIds[0])
-	//     		})
- //    	}
- //    })
+	    	request.post(
+	    		delayedResponseUrl,
+	    		{
+	    			json: {
+	    		 		response_type: 'in_channel',
+	    		 		text: 'followup response'			
+	    		 	} 
+	    		},
+	    		null
+	    	)
+    	}
+    })
 
  
 	
