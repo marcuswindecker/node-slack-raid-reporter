@@ -33,7 +33,7 @@ app.post('/api/raid', function(req, res) {
     	if (player.Response.length === 0) {
     		respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
     	} else {
-    		respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...', username))
+    		respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...Here\'s their raid.report in the meantime: https://raid.report/ps/%s', username, username))
 
     		const membershipId = player.Response[0].membershipId
 
@@ -46,7 +46,7 @@ app.post('/api/raid', function(req, res) {
 			    		{
 			    			json: {
 			    		 		response_type: 'in_channel',
-			    		 		text: characterIds[0]			
+			    		 		text: characterIds[0]
 			    		 	}
 			    		}
 			    	)
