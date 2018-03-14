@@ -41,15 +41,17 @@ app.post('/api/raid', function(req, res) {
           .then((profile) => {
             const characterIds = profile.Response.profile.data.characterIds
 
-            request.post(
-              delayedResponseUrl,
-              {
-                json: {
-                  response_type: 'in_channel',
-                  text: JSON.stringify(profile)
+            for (const i = 0; i < characterIds.length; i++) {
+              request.post(
+                delayedResponseUrl,
+                {
+                  json: {
+                    response_type: 'in_channel',
+                    text: characterIds[i]
+                  }
                 }
-              }
-            )
+              )
+            }
           })
       }
     })
