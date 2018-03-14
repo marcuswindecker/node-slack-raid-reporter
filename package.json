@@ -1,18 +1,16 @@
 {
   "name": "raid-reporter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Destiny 2 raid reporter for Slack",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "Marcus Windecker (https://github.com/marcuswindecker)",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "phantom": "^4.0.12"
+    "express": "^4.16.2"
   },
   "devDependencies": {
     "nodemon": "^1.17.1"
