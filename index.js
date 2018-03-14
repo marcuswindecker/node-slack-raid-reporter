@@ -57,7 +57,7 @@ app.post('/api/raid', function(req, res) {
                   {
                     json: {
                       response_type: 'in_channel',
-                      text: JSON.stringify(stats)
+                      text: JSON.stringify(stats.Response.raid.allTime.activitiesCleared.basic.value)
                     }
                   }
                 )
