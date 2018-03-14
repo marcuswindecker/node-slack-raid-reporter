@@ -1,31 +1,33 @@
-var Traveler = require('the-traveler').default
-var Enums = require('the-traveler/build/enums')
-var bodyParser = require('body-parser')
-var util = require('util')
-var express = require('express')
-var app = express()
+const dotenv = require('dotenv')
+const Traveler = require('the-traveler').default
+const Enums = require('the-traveler/build/enums')
+const bodyParser = require('body-parser')
+const util = require('util')
+const express = require('express')
+const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }));
+dotenv.config()
 
-var traveler = new Traveler({
-  apikey: '', // TODO: replace with .env var
+const traveler = new Traveler({
+  apikey: process.env.BUNGIE_API_KEY,
   userAgent: 'slack'
 });
 
 app.post('/api/raid', function(req, res) {
 	res.setHeader('Content-Type', 'application/json')
 
-	var username = req.body.text
+	const username = req.body.text
 
 	traveler.searchDestinyPlayer('2', username)
     .then((player) => {
     	if (player.Response.length === 0) {
     		res.send(JSON.stringify('there was an error'))
     	} else {
-	    	var membershipId = player.Response[0].membershipId
+	    	const membershipId = player.Response[0].membershipId
 	    	traveler.getProfile('2', membershipId, { components: 100 })
 	    		.then((profile) => {
-	    			var characterIds = profile.Response.profile.data.characterIds
+	    			const characterIds = profile.Response.profile.data.characterIds
 
 	    			res.send(JSON.stringify(characterIds))
 	    		})
@@ -41,7 +43,7 @@ app.post('/api/raid', function(req, res) {
  //  }))
 })
 
-var server = app.listen(process.env.PORT || 3000, function () {
-  var port = server.address().port
+const server = app.listen(process.env.PORT || 3000, function () {
+  const port = server.address().port
   console.log('Slack Raid Reporter listening on localhost:%s', port)
 })
