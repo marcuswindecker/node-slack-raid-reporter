@@ -42,15 +42,26 @@ app.post('/api/raid', function(req, res) {
             const characterIds = profile.Response.profile.data.characterIds
 
             for (let i = 0; i < characterIds.length; i++) {
-              request.post(
-                delayedResponseUrl,
+              traveler.getHistoricalStats(
+                2, 
+                membershipId, 
+                characterIds[i],
                 {
-                  json: {
-                    response_type: 'in_channel',
-                    text: characterIds[i]
-                  }
+                  groups: 1,
+                  modes: 4,
+                  periodType: 2
                 }
-              )
+              ).then((stats) => {
+                request.post(
+                  delayedResponseUrl,
+                  {
+                    json: {
+                      response_type: 'in_channel',
+                      text: JSON.stringify(stats)
+                    }
+                  }
+                )
+              })
             }
           })
       }
