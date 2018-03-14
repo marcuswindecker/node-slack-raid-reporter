@@ -16,51 +16,43 @@ const traveler = new Traveler({
 });
 
 function respondToInitialSlackRequest(response, text) {
-	response.send(JSON.stringify({
-		response_type: 'in_channel',
-		text: text
-	}))
+  response.send(JSON.stringify({
+    response_type: 'in_channel',
+    text: text
+  }))
 }
 
 app.post('/api/raid', function(req, res) {
-	res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Content-Type', 'application/json')
 
-	const username = req.body.text
-	const delayedResponseUrl = req.body.response_url
+  const username = req.body.text
+  const delayedResponseUrl = req.body.response_url
 
-	traveler.searchDestinyPlayer('2', username)
+  traveler.searchDestinyPlayer('2', username)
     .then((player) => {
-    	if (player.Response.length === 0) {
-    		respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
-    	} else {
-    		respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...Here\'s their raid.report in the meantime: https://raid.report/ps/%s', username, username))
+      if (player.Response.length === 0) {
+        respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
+      } else {
+        respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...Here\'s their raid.report in the meantime: https://raid.report/ps/%s', username, username))
 
-    		const membershipId = player.Response[0].membershipId
+        const membershipId = player.Response[0].membershipId
 
-    		traveler.getProfile('2', membershipId, { components: 100 })
- 	    		.then((profile) => {
- 	    			const characterIds = profile.Response.profile.data.characterIds
- 						
- 						request.post(
-			    		delayedResponseUrl,
-			    		{
-			    			json: {
-			    		 		response_type: 'in_channel',
-			    		 		text: characterIds[0]
-			    		 	}
-			    		}
-			    	)
- 	    		})
-    	}
+        traveler.getProfile('2', membershipId, { components: 100 })
+          .then((profile) => {
+            const characterIds = profile.Response.profile.data.characterIds
+
+            request.post(
+              delayedResponseUrl,
+              {
+                json: {
+                  response_type: 'in_channel',
+                  text: JSON.stringify(profile)
+                }
+              }
+            )
+          })
+      }
     })
-
- 
-	
-
-	// res.send(JSON.stringify({
- //  	response_type: 'in_channel',
- //  	text: util.format('Here\'s the raid report for %s on PSN: https://raid.report/ps/%s', reqText, reqText)
- //  }))
 })
 
 const server = app.listen(process.env.PORT || 3000, function () {
