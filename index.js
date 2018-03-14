@@ -35,16 +35,22 @@ app.post('/api/raid', function(req, res) {
     	} else {
     		respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...', username))
 
-	    	request.post(
-	    		delayedResponseUrl,
-	    		{
-	    			json: {
-	    		 		response_type: 'in_channel',
-	    		 		text: 'followup response'			
-	    		 	} 
-	    		},
-	    		null
-	    	)
+    		const membershipId = player.Response[0].membershipId
+
+    		traveler.getProfile('2', membershipId, { components: 100 })
+ 	    		.then((profile) => {
+ 	    			const characterIds = profile.Response.profile.data.characterIds
+ 						
+ 						request.post(
+			    		delayedResponseUrl,
+			    		{
+			    			json: {
+			    		 		response_type: 'in_channel',
+			    		 		text: characterIds[0]			
+			    		 	}
+			    		}
+			    	)
+ 	    		})
     	}
     })
 
