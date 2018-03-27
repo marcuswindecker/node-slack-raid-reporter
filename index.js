@@ -28,11 +28,11 @@ function delayedResponse(url, completions, error=false) {
   if (error && error.message) {
     text = error.message
   } else {
-    text = completions
+    text = util.format('This user has %d completions total on PSN.', completions)
   }
 
   request.post(
-    url,
+    url, 
     {
       json: {
         response_type: 'in_channel',
