@@ -15,58 +15,116 @@ const traveler = new Traveler({
   userAgent: 'slack'
 });
 
-function respondToInitialSlackRequest(response, text) {
+function initialResponse(response, username) {
   response.send(JSON.stringify({
     response_type: 'in_channel',
-    text: text
+    text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
   }))
 }
 
-app.post('/api/raid', function(req, res) {
+function delayedResponse(url, completions, error=false) {
+  let text = ''
+
+  if (error && error.message) {
+    text = error.message
+  } else {
+    text = completions
+  }
+
+  request.post(
+    url,
+    {
+      json: {
+        response_type: 'in_channel',
+        text: text
+      }
+    }
+  )
+}
+
+function getPlayer(username) {
+  return traveler.searchDestinyPlayer(2, username)
+}
+
+function getProfile(player) {
+  if (player.Response.length === 0) {
+    throw new Error('Couldn\'t find that user on PSN :(')
+  } else {
+    const membershipId = player.Response[0].membershipId
+
+    return traveler.getProfile(2, membershipId, { components: 100 })
+  }
+}
+
+function getCharacterStats(profile) {
+  const membershipId = profile.Response.profile.data.userInfo.membershipId
+  const characterIds = profile.Response.profile.data.characterIds
+
+  let promises = []
+
+  for (const characterId of characterIds) {
+    promises.push(traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }))
+  }
+
+  return Promise.all(promises)
+}
+
+app.post('/api/raid', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   const username = req.body.text
   const delayedResponseUrl = req.body.response_url
 
-  traveler.searchDestinyPlayer('2', username)
-    .then((player) => {
-      if (player.Response.length === 0) {
-        respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
-      } else {
-        respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...Here\'s their raid.report in the meantime: https://raid.report/ps/%s', username, username))
+  initialResponse(res, username)
 
-        const membershipId = player.Response[0].membershipId
+  getPlayer(username)
+    .then((player) => getProfile(player))
+    .then((profile) => getCharacterStats(profile))
+    .then((stats) => {
+      let completions = 0
 
-        traveler.getProfile('2', membershipId, { components: 100 })
-          .then((profile) => {
-            const characterIds = profile.Response.profile.data.characterIds
-
-            for (let i = 0; i < characterIds.length; i++) {
-              traveler.getHistoricalStats(
-                2, 
-                membershipId, 
-                characterIds[i],
-                {
-                  groups: 1,
-                  modes: 4,
-                  periodType: 2
-                }
-              ).then((stats) => {
-                request.post(
-                  delayedResponseUrl,
-                  {
-                    json: {
-                      response_type: 'in_channel',
-                      text: JSON.stringify(stats.Response.raid.allTime.activitiesCleared.basic.value)
-                    }
-                  }
-                )
-              })
-            }
-          })
+      for (const character of stats) {
+        completions += character.Response.raid.allTime.activitiesCleared.basic.value
       }
+
+      delayedResponse(delayedResponseUrl, completions)
+    })
+    .catch((error) => {
+      delayedResponse(delayedResponseUrl, 0, error)
     })
 })
+
+// app.post('/api/raid', function(req, res) {
+//   res.setHeader('Content-Type', 'application/json')
+
+//   const username = req.body.text
+//   const delayedResponseUrl = req.body.response_url
+
+//   traveler.searchDestinyPlayer('2', username)
+//     .then((player) => {
+//       if (player.Response.length === 0) {
+//         // respondToInitialSlackRequest(res, util.format('Couldn\'t find the user %s on PSN', username))
+//       } else {
+//         // respondToInitialSlackRequest(res, util.format('Retrieving data for user %s on PSN...Here\'s their raid.report in the meantime: https://raid.report/ps/%s', username, username))
+
+//         const membershipId = player.Response[0].membershipId
+
+//         traveler.getProfile('2', membershipId, { components: 100 })
+//           .then((profile) => {
+//             const characterIds = profile.Response.profile.data.characterIds
+//             let completions = []
+
+//             for (let i = 0; i < characterIds.length; i++) {
+//               completions.push(getStats(membershipId, characterIds[i]))
+//             }
+
+//             console.log(completions)
+
+//             respondToInitialSlackRequest(res, JSON.stringify(completions))
+//           })
+//       }
+//     })
+// })
 
 const server = app.listen(process.env.PORT || 3000, function () {
   const port = server.address().port
