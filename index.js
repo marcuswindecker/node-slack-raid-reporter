@@ -7,6 +7,9 @@ const util = require('util')
 const request = require('request')
 const express = require('express')
 
+// require custom libs
+const test = require('./dist/test.js').default
+
 // init Express
 const app = express()
 
@@ -29,7 +32,8 @@ const traveler = new Traveler({
 function initialResponse(response, username) {
   response.send(JSON.stringify({
     response_type: 'in_channel',
-    text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+    // text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+    text: test.test()
   }))
 }
 
@@ -119,6 +123,8 @@ app.post('/api/raid', (req, res) => {
     .then((player) => getProfile(player))
     .then((profile) => getCharacterStats(profile))
     .then((stats) => {
+      console.log(test.test())
+
       let completions = 0
 
       for (const character of stats) {

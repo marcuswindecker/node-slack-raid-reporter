@@ -59,4 +59,4 @@ The code in this repo may be stable or unstable at any given time. Beware! Maybe
 ## Acknowledgements
 * [The Traveler](https://github.com/alexanderwe/the-traveler) npm package from @alexanderwe - This package is the only reason this entire project came together. I can't express how happy I was to find this and how smooth it made the project.
 * The [raid.report](https://raid.report) team for their work on one of the most damn useful Destiny 2 webapps I've come across. Seriously, that thing is slick.
-* Bungie for providing such a comprehensive API for Destiny 2. (Although, your docs need some work...)
+* Bungie for providing such a comprehensive API for Destiny 2.
