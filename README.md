@@ -28,8 +28,8 @@ POST /api/raid
 
 Request:
 {
-		'text': '<username>',
-		'response_url': '<url>'
+    'text': '<username>',
+    'response_url': '<url>'
 }
 
 Initial Response:
@@ -40,7 +40,7 @@ Initial Response:
 
 Delayed Response:
 {
-		'response_type': 'in_channel',
+    'response_type': 'in_channel',
     'text': 'This user has <completion_count> completions in total on PSN.'
 }
 ```
