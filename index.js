@@ -1,8 +1,6 @@
 // require external libs
 const dotenv = require('dotenv')
-const Enums = require('the-traveler/build/enums')
 const bodyParser = require('body-parser')
-const util = require('util')
 const express = require('express')
 
 // require custom libs
