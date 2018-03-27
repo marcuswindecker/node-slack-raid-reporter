@@ -1,8 +1,16 @@
 # Slack Raid Reporter
 ##### Because knowing is half the battle.
-This is a Slack app designed to help you build a competent raid fireteam in Destiny 2. It's triggered with a [slash command](https://api.slack.com/slash-commands) that you build.
+This is a Slack app designed to help you build a competent raid fireteam in Destiny 2. It's triggered with a [slash command](https://api.slack.com/slash-commands) that you customize.
 
-`/report skaterape` returns "Here's the raid report for skaterape on PSN: [https://raid.report/ps/skaterape](https://raid.report/ps/skaterape)"
+`/report marcuswindecker` returns an initial response that looks like:
+
+`Processing request! Here's the raid.report in the meantime: https://raid.report/ps/marcuswindecker`
+
+This initial response satisfies the 3sec window that Slack waits for before timing out the request. Once the full stats are retrieved, a followup response is POSTed to the `response_url` sent with the initial Slack request. That followup response looks like:
+
+`This user has 420 completions in total on PSN.`
+
+An error message is returned if the user isn't found on PSN.
 
 ##### Deploying this app on Heroku.
 1. Clone or fork this repo
@@ -14,19 +22,26 @@ This is a Slack app designed to help you build a competent raid fireteam in Dest
 7. When you've verified that the app is correctly deployed on Heroku, create a new slack app in your channel. Create a slash command within the app and point it at your newly created Heroku URL using whatever command you prefer to trigger the app, I like `/report` but you can use `/jamjort` if you want.
 8. If all goes well, you'll be reporting on fools in no time and getting those 30-minute raids in with a solid team.
 
-*Note:* currently, there is a single endpoint: `/stats`. The request/response structure is as follows:
+*Note:* currently, there is a single endpoint: `/api/raid`. The request/initial response structure is as follows:
 ```javascript
-POST /stats
+POST /api/raid
 
 Request:
 {
-	'text': '<username>'
+	'text': '<username>',
+	'response_url': '<url>'
 }
 
-Response:
+Initial Response:
+{
+    'response_type': 'in_channel',
+    'text': 'Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/<username>'
+}
+
+Delayed Response:
 {
 	'response_type': 'in_channel',
-    'text': 'Here\'s the raid report for <username> on PSN: https://raid.report/ps/<username>'
+    'text': 'This user has <completion_count> completions in total on PSN.'
 }
 ```
 
@@ -36,11 +51,12 @@ The code in this repo may be stable or unstable at any given time. Beware! Maybe
 ## Roadmap:
 * Ability to specify platform with the request i.e. `/report xbox marcuswindecker`, `/report psn marcuswindecker`
 * Ability to specify a specific raid with the request i.e. `/report leviathan marcuswindecker`, `/report eaterofworlds marcuswindecker`
-* Possibly using something like [PhantomJS](http://phantomjs.org/) to scrape the raid.report site and either provide a screenshot or the values in the `.total-completions` fields
-	* I wasn't having much luck with this due to raid.report being a react app. I was getting some funny errors back when crawling the page. (Let me know if you think you can help with this, I'll pay in beer or raid runs!) 	
-* V2: remove the raid.report dependency and go directly to the Bungie API for the data
+* Include additional stats like:
+	* completion percentage
+	* times: fastest, average, most recent
+	* dates: first, most recent
 
 ## Acknowledgements
+* [The Traveler](https://github.com/alexanderwe/the-traveler) npm package from @alexanderwe - This package is the only reason this entire project came together. I can't express how happy I was to find this and how smooth it made the project.
 * The [raid.report](https://raid.report) team for their work on one of the most damn useful Destiny 2 webapps I've come across. Seriously, that thing is slick.
 * Bungie for providing such a comprehensive API for Destiny 2. (Although, your docs need some work...)
-* [The Traveler](https://github.com/alexanderwe/the-traveler) npm package from @alexanderwe - I haven't made use of this yet, but I can already tell it's going to come in handy...
