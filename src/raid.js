@@ -7,6 +7,9 @@ class Raid {
 		  apikey: process.env.BUNGIE_API_KEY,
 		  userAgent: 'slack'
 		});
+
+		this.leviathanHash = '2693136602'
+		this.eaterOfWorldsHash = '3089205900'
 	}
 
 	/**
@@ -27,7 +30,7 @@ class Raid {
 	 * @return {Promise} - resolves to a Profile object from the Bungie API
 	 */
 	getProfile(player) {
-	  if (player.Response.length === 0) {
+	  if (!player.Response.length) {
 	    throw new Error('Couldn\'t find that user on PSN :(')
 	  } else {
 	    const membershipId = player.Response[0].membershipId
@@ -50,6 +53,19 @@ class Raid {
 
 	  for (const characterId of characterIds) {
 	    promises.push(this.traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }))
+	  }
+
+	  return Promise.all(promises)
+	}
+
+	getActivityStats(profile) {
+		const membershipId = profile.Response.profile.data.userInfo.membershipId
+	  const characterIds = profile.Response.profile.data.characterIds
+
+	  let promises = []
+
+	  for (const characterId of characterIds) {
+	    promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId))
 	  }
 
 	  return Promise.all(promises)

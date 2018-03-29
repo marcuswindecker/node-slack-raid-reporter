@@ -1,5 +1,5 @@
 // require external libs
-const dotenv = require('dotenv')
+const dotenv = require('dotenv').config()
 const bodyParser = require('body-parser')
 const express = require('express')
 
@@ -10,9 +10,8 @@ const raid = require('./dist/raid.js').default
 // init Express
 const app = express()
 
-// init request parsing lib and dotenv
+// init request parsing lib
 app.use(bodyParser.urlencoded({ extended: true }));
-dotenv.config()
 
 //------------- ENDPOINTS START HERE ------------------//
 app.post('/api/raid', (req, res) => {
@@ -26,6 +25,7 @@ app.post('/api/raid', (req, res) => {
   raid.getPlayer(username)
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
+    // .then((profile) => raid.getActivityStats(profile))
     .then((stats) => {
       let completions = 0
 

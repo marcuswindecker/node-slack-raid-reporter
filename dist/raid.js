@@ -26,6 +26,9 @@ var Raid = function () {
 			apikey: process.env.BUNGIE_API_KEY,
 			userAgent: 'slack'
 		});
+
+		this.leviathanHash = '2693136602';
+		this.eaterOfWorldsHash = '3089205900';
 	}
 
 	/**
@@ -53,7 +56,7 @@ var Raid = function () {
 	}, {
 		key: 'getProfile',
 		value: function getProfile(player) {
-			if (player.Response.length === 0) {
+			if (!player.Response.length) {
 				throw new Error('Couldn\'t find that user on PSN :(');
 			} else {
 				var membershipId = player.Response[0].membershipId;
@@ -98,6 +101,41 @@ var Raid = function () {
 				} finally {
 					if (_didIteratorError) {
 						throw _iteratorError;
+					}
+				}
+			}
+
+			return Promise.all(promises);
+		}
+	}, {
+		key: 'getActivityStats',
+		value: function getActivityStats(profile) {
+			var membershipId = profile.Response.profile.data.userInfo.membershipId;
+			var characterIds = profile.Response.profile.data.characterIds;
+
+			var promises = [];
+
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
+
+			try {
+				for (var _iterator2 = characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var characterId = _step2.value;
+
+					promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId));
+				}
+			} catch (err) {
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
+					}
+				} finally {
+					if (_didIteratorError2) {
+						throw _iteratorError2;
 					}
 				}
 			}
