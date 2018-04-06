@@ -23,21 +23,59 @@ var Net = function () {
 		_classCallCheck(this, Net);
 	}
 
-	/**
-  * Responds to the initial slack request in order to satisfy the 3sec initial response window.
-  * 
-  * @param  {object} response - the Express res object
-  * @param  {string} username - the username included in the slack request
-  */
-
-
 	_createClass(Net, [{
-		key: 'initialResponse',
-		value: function initialResponse(response, username) {
-			response.send(JSON.stringify({
+		key: 'buildInitialResponse',
+		value: function buildInitialResponse(username) {
+			var response = {
 				response_type: 'in_channel',
 				text: _util2.default.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
-			}));
+			};
+
+			return response;
+		}
+	}, {
+		key: 'buildErrorResponse',
+		value: function buildErrorResponse(error) {
+			var response = {
+				response_type: 'in_channel',
+				attachments: [{
+					fallback: error.message,
+					text: error.message,
+					color: 'danger'
+				}]
+			};
+
+			return response;
+		}
+	}, {
+		key: 'buildSuccessResponse',
+		value: function buildSuccessResponse(stats) {
+			var response = {
+				response_type: 'in_channel',
+				text: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
+				attachments: [{
+					fallback: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
+					text: _util2.default.format('Here\'s some other stats:', stats.completions),
+					color: 'good'
+				}]
+			};
+
+			return response;
+		}
+
+		/**
+   * Responds to the initial slack request in order to satisfy the 3sec initial response window.
+   * 
+   * @param  {object} response - the Express res object
+   * @param  {string} username - the username included in the slack request
+   */
+
+	}, {
+		key: 'initialResponse',
+		value: function initialResponse(res, username) {
+			var initialResponse = this.buildInitialResponse(username);
+
+			res.send(JSON.stringify(initialResponse));
 		}
 
 		/**
@@ -56,19 +94,9 @@ var Net = function () {
 			var responseBody = {};
 
 			if (error && error.message) {
-				responseBody = {
-					response_type: 'in_channel',
-					attachments: [{
-						fallback: error.message,
-						text: error.message,
-						color: 'danger'
-					}]
-				};
+				responseBody = this.buildErrorResponse(error);
 			} else {
-				responseBody = {
-					response_type: 'in_channel',
-					text: _util2.default.format('This user has %d completions in total on PSN.', statsResponse.completions)
-				};
+				responseBody = this.buildSuccessResponse(statsResponse);
 			}
 
 			_request2.default.post(url, {
