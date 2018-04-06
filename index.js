@@ -26,14 +26,9 @@ app.post('/api/raid', (req, res) => {
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))
-    .then((stats) => {
-      let completions = 0
-
-      for (const character of stats) {
-        completions += character.Response.raid.allTime.activitiesCleared.basic.value
-      }
-
-      net.delayedResponse(delayedResponseUrl, completions)
+    .then((stats) => raid.buildStatsResponse(stats))
+    .then((statsResponse) => {
+      net.delayedResponse(delayedResponseUrl, statsResponse)
     })
     .catch((error) => {
       net.delayedResponse(delayedResponseUrl, 0, error)

@@ -21,25 +21,29 @@ class Net {
 	 * POSTs followup responses to the delayed response url included with the original slack request. Uses the Request package.
 	 * 
 	 * @param  {string} url - the url we will POST to
-	 * @param  {number} completions - total number of completions for the user
+	 * @param  {object} statsResponse - the statsResponse object built in raid.buildStatsResponse()
 	 * @param  {mixed} error - defaults false. if included, represents the Error object caught in a Promise
 	 */
-	delayedResponse(url, completions, error=false) {
-	  let text = ''
-
+	delayedResponse(url, statsResponse, error=false) {
 	  if (error && error.message) {
-	    text = error.message
+	    const responseBody = {
+        response_type: 'in_channel',
+        attachments: [{
+        	fallback: error.message,
+        	color: danger
+        }]
+      }
 	  } else {
-	    text = util.format('This user has %d completions in total on PSN.', completions)
+	    const responseBody = {
+	    	response_type: 'in_channel',
+	    	text: util.format('This user has %d completions in total on PSN.', statsResponse.completions)
+	    }
 	  }
 
 	  request.post(
 	    url, 
 	    {
-	      json: {
-	        response_type: 'in_channel',
-	        text: text
-	      }
+	      json: responseBody
 	    }
 	  )
 	}

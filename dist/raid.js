@@ -32,14 +32,68 @@ var Raid = function () {
 	}
 
 	/**
-  * Retrieves a Player object from the Bungie API
+  * Builds the response object we'll use to send data back to Slack
   * 
-  * @param  {string} username - the username included in the slack request
-  * @return {Promise} - resolves to a Player object from the Bungie API
+  * @param  {object} stats - the Stats object retrieved in one of: this.getCharacterStats(), this.getActivityStats()
+  * @return {Promise} - Resolves after all of the stats are calculated and the response object built
   */
 
 
 	_createClass(Raid, [{
+		key: 'buildStatsResponse',
+		value: function buildStatsResponse(stats) {
+			var promise = new Promise(function (resolve) {
+				var entered = 0;
+				var completions = 0;
+				var fastestTimes = [];
+
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
+
+				try {
+					for (var _iterator = stats[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var character = _step.value;
+
+						entered += character.Response.raid.allTime.activitiesEntered.basic.value;
+						completions += character.Response.raid.allTime.activitiesCleared.basic.value;
+						fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.displayValue);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+
+				var statsResponse = {
+					completions: completions,
+					completion_pct: completions / entered,
+					fastest_times: fastestTimes
+				};
+
+				resolve(statsResponse);
+			});
+
+			return promise;
+		}
+
+		/**
+   * Retrieves a Player object from the Bungie API
+   * 
+   * @param  {string} username - the username included in the slack request
+   * @return {Promise} - resolves to a Player object from the Bungie API
+   */
+
+	}, {
 		key: 'getPlayer',
 		value: function getPlayer(username) {
 			return this.traveler.searchDestinyPlayer(2, username);
@@ -66,50 +120,15 @@ var Raid = function () {
 		}
 
 		/**
-   * Retrieves a Stats object from the Bungie API
+   * Retrieves a Character Stats object from the Bungie API
    * 
    * @param  {object} profile - the Profile object retrieved in getProfile()
-   * @return {Promise} - issues a Stats request for each character in the profile and merge the results into a single resolved Promise
+   * @return {Promise} - issues a Character Stats request for each character in the profile and merge the results into a single resolved Promise
    */
 
 	}, {
 		key: 'getCharacterStats',
 		value: function getCharacterStats(profile) {
-			var membershipId = profile.Response.profile.data.userInfo.membershipId;
-			var characterIds = profile.Response.profile.data.characterIds;
-
-			var promises = [];
-
-			var _iteratorNormalCompletion = true;
-			var _didIteratorError = false;
-			var _iteratorError = undefined;
-
-			try {
-				for (var _iterator = characterIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-					var characterId = _step.value;
-
-					promises.push(this.traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }));
-				}
-			} catch (err) {
-				_didIteratorError = true;
-				_iteratorError = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion && _iterator.return) {
-						_iterator.return();
-					}
-				} finally {
-					if (_didIteratorError) {
-						throw _iteratorError;
-					}
-				}
-			}
-
-			return Promise.all(promises);
-		}
-	}, {
-		key: 'getActivityStats',
-		value: function getActivityStats(profile) {
 			var membershipId = profile.Response.profile.data.userInfo.membershipId;
 			var characterIds = profile.Response.profile.data.characterIds;
 
@@ -123,7 +142,7 @@ var Raid = function () {
 				for (var _iterator2 = characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 					var characterId = _step2.value;
 
-					promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId));
+					promises.push(this.traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }));
 				}
 			} catch (err) {
 				_didIteratorError2 = true;
@@ -136,6 +155,49 @@ var Raid = function () {
 				} finally {
 					if (_didIteratorError2) {
 						throw _iteratorError2;
+					}
+				}
+			}
+
+			return Promise.all(promises);
+		}
+
+		/**
+   * Retrieves an Activity Stats object from the Bungie API
+   * 
+   * @param  {object} profile - the Profile object retrieved in getProfile()
+   * @return {Promise} - issues an Activity Stats request for each character in the profile and merge the results into a single resolved Promise
+   */
+
+	}, {
+		key: 'getActivityStats',
+		value: function getActivityStats(profile) {
+			var membershipId = profile.Response.profile.data.userInfo.membershipId;
+			var characterIds = profile.Response.profile.data.characterIds;
+
+			var promises = [];
+
+			var _iteratorNormalCompletion3 = true;
+			var _didIteratorError3 = false;
+			var _iteratorError3 = undefined;
+
+			try {
+				for (var _iterator3 = characterIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+					var characterId = _step3.value;
+
+					promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId));
+				}
+			} catch (err) {
+				_didIteratorError3 = true;
+				_iteratorError3 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion3 && _iterator3.return) {
+						_iterator3.return();
+					}
+				} finally {
+					if (_didIteratorError3) {
+						throw _iteratorError3;
 					}
 				}
 			}

@@ -44,28 +44,32 @@ var Net = function () {
    * POSTs followup responses to the delayed response url included with the original slack request. Uses the Request package.
    * 
    * @param  {string} url - the url we will POST to
-   * @param  {number} completions - total number of completions for the user
+   * @param  {object} statsResponse - the statsResponse object built in raid.buildStatsResponse()
    * @param  {mixed} error - defaults false. if included, represents the Error object caught in a Promise
    */
 
 	}, {
 		key: 'delayedResponse',
-		value: function delayedResponse(url, completions) {
+		value: function delayedResponse(url, statsResponse) {
 			var error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-			var text = '';
-
 			if (error && error.message) {
-				text = error.message;
+				var _responseBody = {
+					response_type: 'in_channel',
+					attachments: [{
+						fallback: error.message,
+						color: danger
+					}]
+				};
 			} else {
-				text = _util2.default.format('This user has %d completions in total on PSN.', completions);
+				var _responseBody2 = {
+					response_type: 'in_channel',
+					text: _util2.default.format('This user has %d completions in total on PSN.', statsResponse.completions)
+				};
 			}
 
 			_request2.default.post(url, {
-				json: {
-					response_type: 'in_channel',
-					text: text
-				}
+				json: responseBody
 			});
 		}
 	}]);
