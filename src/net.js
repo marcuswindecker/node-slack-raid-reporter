@@ -25,16 +25,19 @@ class Net {
 	 * @param  {mixed} error - defaults false. if included, represents the Error object caught in a Promise
 	 */
 	delayedResponse(url, statsResponse, error=false) {
+	  let responseBody = {}
+
 	  if (error && error.message) {
-	    const responseBody = {
+	    responseBody = {
         response_type: 'in_channel',
         attachments: [{
         	fallback: error.message,
-        	color: danger
+        	text: error.message,
+        	color: 'danger'
         }]
       }
 	  } else {
-	    const responseBody = {
+	   	responseBody = {
 	    	response_type: 'in_channel',
 	    	text: util.format('This user has %d completions in total on PSN.', statsResponse.completions)
 	    }

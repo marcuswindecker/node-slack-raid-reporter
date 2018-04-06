@@ -53,16 +53,19 @@ var Net = function () {
 		value: function delayedResponse(url, statsResponse) {
 			var error = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
+			var responseBody = {};
+
 			if (error && error.message) {
-				var _responseBody = {
+				responseBody = {
 					response_type: 'in_channel',
 					attachments: [{
 						fallback: error.message,
-						color: danger
+						text: error.message,
+						color: 'danger'
 					}]
 				};
 			} else {
-				var _responseBody2 = {
+				responseBody = {
 					response_type: 'in_channel',
 					text: _util2.default.format('This user has %d completions in total on PSN.', statsResponse.completions)
 				};
