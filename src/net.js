@@ -7,7 +7,7 @@ class Net {
 	buildInitialResponse(username) {
 		const response = {
 	    response_type: 'ephemeral',
-	    text: 'Processing request...'
+	    text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
 	  }
 
 	  return response
@@ -29,6 +29,7 @@ class Net {
 	buildSuccessResponse(stats) {
 		const response = {
 			response_type: 'in_channel',
+			text: 'Here are the detailed stats:',
 	    attachments: [{
 	    	fallback: util.format('This user has %d completions in total on PSN.', stats.completions),
 	    	fields: [
@@ -39,7 +40,7 @@ class Net {
 	    		},
 	    		{
 	    			title: 'Completion Percentage',
-	    			value: (stats.completion_pct * 100).toFixed(2) + '%',
+	    			value: Math.round(stats.completion_pct) + '%',
 	    			short: true
 	    		}
 	    	],

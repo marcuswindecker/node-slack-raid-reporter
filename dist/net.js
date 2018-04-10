@@ -28,7 +28,7 @@ var Net = function () {
 		value: function buildInitialResponse(username) {
 			var response = {
 				response_type: 'ephemeral',
-				text: 'Processing request...'
+				text: _util2.default.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
 			};
 
 			return response;
@@ -52,6 +52,7 @@ var Net = function () {
 		value: function buildSuccessResponse(stats) {
 			var response = {
 				response_type: 'in_channel',
+				text: 'Here are the detailed stats:',
 				attachments: [{
 					fallback: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
 					fields: [{
@@ -60,7 +61,7 @@ var Net = function () {
 						short: true
 					}, {
 						title: 'Completion Percentage',
-						value: (stats.completion_pct * 100).toFixed(2) + '%',
+						value: Math.round(stats.completion_pct) + '%',
 						short: true
 					}],
 					color: 'good'
