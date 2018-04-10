@@ -55,7 +55,7 @@ var Net = function () {
 				text: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
 				attachments: [{
 					fallback: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
-					text: _util2.default.format('Here\'s some other stats:', stats.completions),
+					text: 'Here\'re\'s some other stats: Bush did 9/11',
 					color: 'good'
 				}]
 			};

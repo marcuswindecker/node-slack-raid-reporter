@@ -1,8 +1,8 @@
-# Slack Raid Reporter
+# The Speaker
 ##### Because knowing is half the battle.
 This is a Slack app designed to help you build a competent raid fireteam in Destiny 2. It's triggered with a [slash command](https://api.slack.com/slash-commands) that you customize.
 
-`/report marcuswindecker` returns an initial response that looks like:
+`/speaker marcuswindecker` returns an initial response that looks like:
 
 `Processing request! Here's the raid.report in the meantime: https://raid.report/ps/marcuswindecker`
 
@@ -49,8 +49,8 @@ Delayed Response:
 The code in this repo may be stable or unstable at any given time. Beware! Maybe if this thing gets traction I'll put a proper release protocol in place but for now everything's going to `master`!
 
 ## Roadmap:
-* Ability to specify platform with the request i.e. `/report xbox marcuswindecker`, `/report psn marcuswindecker`
-* Ability to specify a specific raid with the request i.e. `/report leviathan marcuswindecker`, `/report eaterofworlds marcuswindecker`
+* Ability to specify platform with the request i.e. `/speaker xbox marcuswindecker`, `/speaker psn marcuswindecker`
+* Ability to specify a specific raid with the request i.e. `/speaker leviathan marcuswindecker`, `/speaker eaterofworlds marcuswindecker`
 * Include additional stats like:
 	* completion percentage
 	* times: fastest, average, most recent

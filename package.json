@@ -1,5 +1,5 @@
 {
-  "name": "raid-reporter",
+  "name": "the-speaker",
   "version": "1.0.0",
   "description": "Destiny 2 raid reporter for Slack",
   "main": "index.js",

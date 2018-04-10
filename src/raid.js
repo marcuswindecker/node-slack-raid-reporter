@@ -8,8 +8,10 @@ class Raid {
 		  userAgent: 'slack'
 		});
 
-		this.leviathanHash = '2693136602'
-		this.eaterOfWorldsHash = '3089205900'
+		this.activityHashes = {
+			leviathan: '2693136602',
+			eaterOfWorlds: '3089205900'
+		}
 	}
 
 	/**

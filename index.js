@@ -38,5 +38,5 @@ app.post('/api/raid', (req, res) => {
 //------------- SERVER STARTS HERE ------------------//
 const server = app.listen(process.env.PORT || 3000, function () {
   const port = server.address().port
-  console.log('Slack Raid Reporter listening on localhost:%s', port)
+  console.log('The Speaker listening on localhost:%s', port)
 })
