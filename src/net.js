@@ -40,7 +40,7 @@ class Net {
 	    		},
 	    		{
 	    			title: 'Completion Percentage',
-	    			value: Math.round(stats.completion_pct) + '%',
+	    			value: Math.round(stats.completion_pct * 100) + '%',
 	    			short: true
 	    		}
 	    	],

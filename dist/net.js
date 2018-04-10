@@ -61,7 +61,7 @@ var Net = function () {
 						short: true
 					}, {
 						title: 'Completion Percentage',
-						value: Math.round(stats.completion_pct) + '%',
+						value: Math.round(stats.completion_pct * 100) + '%',
 						short: true
 					}],
 					color: 'good'
