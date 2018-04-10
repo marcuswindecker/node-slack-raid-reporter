@@ -41,7 +41,7 @@ class Net {
 	    		},
 	    		{
 	    			title: 'Fastest Times',
-	    			value: stats.fastest_times,
+	    			value: Math.min(...stats.fastest_times),
 	    			short: true
 	    		}
 	    	],
