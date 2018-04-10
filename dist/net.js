@@ -27,8 +27,8 @@ var Net = function () {
 		key: 'buildInitialResponse',
 		value: function buildInitialResponse(username) {
 			var response = {
-				response_type: 'in_channel',
-				text: _util2.default.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+				response_type: 'ephemeral',
+				text: 'Processing request...'
 			};
 
 			return response;

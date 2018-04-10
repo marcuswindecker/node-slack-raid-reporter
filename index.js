@@ -28,12 +28,10 @@ app.post('/api/raid', (req, res) => {
     // .then((profile) => raid.getActivityStats(profile))
     .then((stats) => raid.buildStatsResponse(stats))
     .then((statsResponse) => {
-      console.log(Math.min(...statsResponse.fastest_times))
-
       net.delayedResponse(delayedResponseUrl, statsResponse)
     })
     .catch((error) => {
-      net.delayedResponse(delayedResponseUrl, 0, error)
+      net.delayedResponse(delayedResponseUrl, null, error)
     })
 })
 

@@ -6,8 +6,8 @@ class Net {
 
 	buildInitialResponse(username) {
 		const response = {
-	    response_type: 'in_channel',
-	    text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+	    response_type: 'ephemeral',
+	    text: 'Processing request...'
 	  }
 
 	  return response

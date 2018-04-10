@@ -60,8 +60,6 @@ var Raid = function () {
 						entered += character.Response.raid.allTime.activitiesEntered.basic.value;
 						completions += character.Response.raid.allTime.activitiesCleared.basic.value;
 						fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.displayValue);
-
-						console.log(character.Response.raid.allTime.fastestCompletionMs);
 					}
 				} catch (err) {
 					_didIteratorError = true;
