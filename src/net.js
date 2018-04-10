@@ -32,7 +32,24 @@ class Net {
 			text: util.format('This user has %d completions in total on PSN.', stats.completions),
 	    attachments: [{
 	    	fallback: util.format('This user has %d completions in total on PSN.', stats.completions),
-	    	text: 'Here\'re\'s some other stats: Bush did 9/11',
+	    	text: 'Detailed stats:',
+	    	fields: [
+	    		{
+	    			title: 'Leviathan Clears',
+	    			value: '1',
+	    			short: true
+	    		},
+	    		{
+	    			title: 'EoW Clears',
+	    			value: '421',
+	    			short: true
+	    		},
+	    		{
+	    			title: 'Fastest Raid'
+	    			value: '6:20:02',
+	    			short: false
+	    		}
+	    	],
 	    	color: 'good'
 	    }]
 		}
