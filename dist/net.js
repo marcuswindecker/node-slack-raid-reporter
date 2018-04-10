@@ -52,11 +52,13 @@ var Net = function () {
 		value: function buildSuccessResponse(stats) {
 			var response = {
 				response_type: 'in_channel',
-				text: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
 				attachments: [{
 					fallback: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
-					text: 'Detailed stats:',
 					fields: [{
+						title: 'Total Completions',
+						value: stats.completions,
+						short: true
+					}, {
 						title: 'Completion Percentage',
 						value: (stats.completion_pct * 100).toFixed(2) + '%',
 						short: true
