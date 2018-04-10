@@ -45,7 +45,7 @@ class Net {
 	    			short: true
 	    		},
 	    		{
-	    			title: 'Fastest Raid'
+	    			title: 'Fastest Raid',
 	    			value: '6:20:02',
 	    			short: false
 	    		}
