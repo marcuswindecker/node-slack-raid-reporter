@@ -35,19 +35,14 @@ class Net {
 	    	text: 'Detailed stats:',
 	    	fields: [
 	    		{
-	    			title: 'Leviathan Clears',
-	    			value: '1',
+	    			title: 'Completion Percentage',
+	    			value: stats.completion_pct,
 	    			short: true
 	    		},
 	    		{
-	    			title: 'EoW Clears',
-	    			value: '421',
+	    			title: 'Fastest Times',
+	    			value: stats.fastest_times,
 	    			short: true
-	    		},
-	    		{
-	    			title: 'Fastest Raid',
-	    			value: '6:20:02',
-	    			short: false
 	    		}
 	    	],
 	    	color: 'good'
