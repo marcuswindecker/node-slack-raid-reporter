@@ -36,12 +36,7 @@ class Net {
 	    	fields: [
 	    		{
 	    			title: 'Completion Percentage',
-	    			value: stats.completion_pct,
-	    			short: true
-	    		},
-	    		{
-	    			title: 'Fastest Times',
-	    			value: Math.min(...stats.fastest_times),
+	    			value: (stats.completion_pct * 100).toFixed(2) + '%',
 	    			short: true
 	    		}
 	    	],

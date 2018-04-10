@@ -16,8 +16,6 @@ var _request2 = _interopRequireDefault(_request);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Net = function () {
@@ -60,11 +58,7 @@ var Net = function () {
 					text: 'Detailed stats:',
 					fields: [{
 						title: 'Completion Percentage',
-						value: stats.completion_pct,
-						short: true
-					}, {
-						title: 'Fastest Times',
-						value: Math.min.apply(Math, _toConsumableArray(stats.fastest_times)),
+						value: (stats.completion_pct * 100).toFixed(2) + '%',
 						short: true
 					}],
 					color: 'good'
