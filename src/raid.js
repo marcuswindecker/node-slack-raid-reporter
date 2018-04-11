@@ -2,6 +2,9 @@ import Traveler from 'the-traveler'
 import Enums from 'the-traveler/build/enums'
 import prettyMs from 'pretty-ms'
 
+/**
+ * Handles data retrieval from The Traveler and formats stats
+ */
 class Raid {
   constructor() {
     this.traveler = new Traveler({

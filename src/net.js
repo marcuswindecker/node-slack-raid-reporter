@@ -1,6 +1,9 @@
 import request from 'request'
 import responses from './responses'
 
+/**
+ * This class is used to respond to Slack requests at various points in the workflow
+ */
 class Net {
   constructor(){}
 
@@ -32,12 +35,9 @@ class Net {
       responseBody = responses.buildSuccessResponse(statsResponse)
     }
 
-    request.post(
-      url, 
-      {
-        json: responseBody
-      }
-    )
+    request.post(url, {
+      json: responseBody
+    })
   }
 }
 

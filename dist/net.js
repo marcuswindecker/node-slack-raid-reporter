@@ -18,6 +18,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * This class is used to respond to Slack requests at various points in the workflow
+ */
 var Net = function () {
   function Net() {
     _classCallCheck(this, Net);

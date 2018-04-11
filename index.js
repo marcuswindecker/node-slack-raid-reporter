@@ -27,8 +27,8 @@ app.post('/api/raid', (req, res) => {
     .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))
     .then((stats) => raid.formatStats(stats))
-    .then((statsResponse) => {
-      net.sendDelayedResponse(delayedResponseUrl, statsResponse)
+    .then((formattedStats) => {
+      net.sendDelayedResponse(delayedResponseUrl, formattedStats)
     })
     .catch((error) => {
       net.sendDelayedResponse(delayedResponseUrl, null, error)
@@ -38,5 +38,5 @@ app.post('/api/raid', (req, res) => {
 //------------- SERVER STARTS HERE ------------------//
 const server = app.listen(process.env.PORT || 3000, function () {
   const port = server.address().port
-  console.log('The Speaker listening on localhost:%s', port)
+  console.log('The Speaker is talking to The Traveler on localhost:%s', port)
 })

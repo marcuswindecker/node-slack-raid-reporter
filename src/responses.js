@@ -1,5 +1,8 @@
 import util from 'util'
 
+/**
+ * Helper library used to build Response bodies
+ */
 class Responses {
   constructor() {}
 
