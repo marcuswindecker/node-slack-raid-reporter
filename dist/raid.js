@@ -66,7 +66,10 @@ var Raid = function () {
 
             entered += character.Response.raid.allTime.activitiesEntered.basic.value;
             completions += character.Response.raid.allTime.activitiesCleared.basic.value;
-            fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value);
+
+            if (character.Response.raid.allTime.fastestCompletionMs.basic.value > 0) {
+              fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value);
+            }
           }
         } catch (err) {
           _didIteratorError = true;
@@ -82,6 +85,8 @@ var Raid = function () {
             }
           }
         }
+
+        console.log(fastestTimes);
 
         var fastestTime = (0, _prettyMs2.default)(Math.min.apply(Math, fastestTimes), { secDecimalDigits: 0 });
 

@@ -33,8 +33,13 @@ class Raid {
       for (const character of stats) {
         entered += character.Response.raid.allTime.activitiesEntered.basic.value
         completions += character.Response.raid.allTime.activitiesCleared.basic.value
-        fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value)
+        
+        if (character.Response.raid.allTime.fastestCompletionMs.basic.value > 0) {
+          fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value)
+        }
       }
+
+      console.log(fastestTimes)
 
       const fastestTime = prettyMs(Math.min(...fastestTimes), { secDecimalDigits: 0 })
 
