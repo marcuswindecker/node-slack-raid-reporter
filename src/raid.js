@@ -1,5 +1,4 @@
 import Traveler from 'the-traveler'
-import Enums from 'the-traveler/build/enums'
 import prettyMs from 'pretty-ms'
 
 /**
@@ -10,7 +9,9 @@ class Raid {
     this.traveler = new Traveler({
       apikey: process.env.BUNGIE_API_KEY,
       userAgent: 'slack'
-    });
+    })
+
+    this.enums = require('the-traveler/build/enums')
 
     this.activityHashes = {
       leviathan: '2693136602',
@@ -39,8 +40,6 @@ class Raid {
         }
       }
 
-      console.log(fastestTimes)
-
       const fastestTime = prettyMs(Math.min(...fastestTimes), { secDecimalDigits: 0 })
 
       const formattedStats = {
@@ -62,7 +61,10 @@ class Raid {
    * @return {Promise} - resolves to a Player object from the Bungie API
    */
   getPlayer(username) {
-    return this.traveler.searchDestinyPlayer(2, username)
+    return this.traveler.searchDestinyPlayer(
+      this.enums.BungieMembershipType.PSN, 
+      username
+    )
   }
 
   /**
@@ -78,7 +80,13 @@ class Raid {
     } else {
       const membershipId = player.Response[0].membershipId
 
-      return this.traveler.getProfile(2, membershipId, { components: 100 })
+      return this.traveler.getProfile(
+        this.enums.BungieMembershipType.PSN, 
+        membershipId, 
+        { 
+          components: this.enums.ComponentType.Profiles
+        }
+      )
     }
   }
 
@@ -95,7 +103,18 @@ class Raid {
     let promises = []
 
     for (const characterId of characterIds) {
-      promises.push(this.traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }))
+      promises.push(
+        this.traveler.getHistoricalStats(
+          this.enums.BungieMembershipType.PSN, 
+          membershipId, 
+          characterId, 
+          { 
+            groups: this.enums.DestinyStatsGroupType.General, 
+            modes: this.enums.DestinyActivityModeType.Raid, 
+            periodType: this.enums.PeriodType.AllTime 
+          }
+        )
+      )
     }
 
     return Promise.all(promises)
@@ -114,7 +133,13 @@ class Raid {
     let promises = []
 
     for (const characterId of characterIds) {
-      promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId))
+      promises.push(
+        this.traveler.getAggregateActivityStats(
+          this.enums.BungieMembershipType.PSN, 
+          membershipId, 
+          characterId
+        )
+      )
     }
 
     return Promise.all(promises)

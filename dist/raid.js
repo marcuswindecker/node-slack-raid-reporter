@@ -10,10 +10,6 @@ var _theTraveler = require('the-traveler');
 
 var _theTraveler2 = _interopRequireDefault(_theTraveler);
 
-var _enums = require('the-traveler/build/enums');
-
-var _enums2 = _interopRequireDefault(_enums);
-
 var _prettyMs = require('pretty-ms');
 
 var _prettyMs2 = _interopRequireDefault(_prettyMs);
@@ -33,6 +29,8 @@ var Raid = function () {
       apikey: process.env.BUNGIE_API_KEY,
       userAgent: 'slack'
     });
+
+    this.enums = require('the-traveler/build/enums');
 
     this.activityHashes = {
       leviathan: '2693136602',
@@ -86,8 +84,6 @@ var Raid = function () {
           }
         }
 
-        console.log(fastestTimes);
-
         var fastestTime = (0, _prettyMs2.default)(Math.min.apply(Math, fastestTimes), { secDecimalDigits: 0 });
 
         var formattedStats = {
@@ -112,7 +108,7 @@ var Raid = function () {
   }, {
     key: 'getPlayer',
     value: function getPlayer(username) {
-      return this.traveler.searchDestinyPlayer(2, username);
+      return this.traveler.searchDestinyPlayer(this.enums.BungieMembershipType.PSN, username);
     }
 
     /**
@@ -131,7 +127,9 @@ var Raid = function () {
       } else {
         var membershipId = player.Response[0].membershipId;
 
-        return this.traveler.getProfile(2, membershipId, { components: 100 });
+        return this.traveler.getProfile(this.enums.BungieMembershipType.PSN, membershipId, {
+          components: this.enums.ComponentType.Profiles
+        });
       }
     }
 
@@ -158,7 +156,11 @@ var Raid = function () {
         for (var _iterator2 = characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var characterId = _step2.value;
 
-          promises.push(this.traveler.getHistoricalStats(2, membershipId, characterId, { groups: 1, modes: 4, periodType: 2 }));
+          promises.push(this.traveler.getHistoricalStats(this.enums.BungieMembershipType.PSN, membershipId, characterId, {
+            groups: this.enums.DestinyStatsGroupType.General,
+            modes: this.enums.DestinyActivityModeType.Raid,
+            periodType: this.enums.PeriodType.AllTime
+          }));
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -201,7 +203,7 @@ var Raid = function () {
         for (var _iterator3 = characterIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var characterId = _step3.value;
 
-          promises.push(this.traveler.getAggregateActivityStats(2, membershipId, characterId));
+          promises.push(this.traveler.getAggregateActivityStats(this.enums.BungieMembershipType.PSN, membershipId, characterId));
         }
       } catch (err) {
         _didIteratorError3 = true;
