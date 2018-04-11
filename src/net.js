@@ -1,91 +1,44 @@
-import util from 'util'
 import request from 'request'
+import responses from './responses'
 
 class Net {
-	constructor(){}
+  constructor(){}
 
-	buildInitialResponse(username) {
-		const response = {
-	    response_type: 'ephemeral',
-	    text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
-	  }
+  /**
+   * Responds to the initial slack request in order to satisfy the 3sec initial response window.
+   * 
+   * @param  {object} response - the Express res object
+   * @param  {string} username - the username included in the slack request
+   */
+  sendInitialResponse(res, username) {
+    const initialResponse = responses.buildInitialResponse(username)
 
-	  return response
-	}
-	
-	buildErrorResponse(error) {
-		const response = {
-			response_type: 'in_channel',
-	    attachments: [{
-	    	fallback: error.message,
-	    	text: error.message,
-	    	color: 'danger'
-	    }]
-		}
+    res.send(JSON.stringify(initialResponse))
+  }
 
-		return response
-	}
+  /**
+   * POSTs followup responses to the delayed response url included with the original slack request. Uses the Request package.
+   * 
+   * @param  {string} url - the url we will POST to
+   * @param  {object} statsResponse - the statsResponse object built in raid.buildStatsResponse()
+   * @param  {mixed} error - defaults false. if included, represents the Error object caught in a Promise
+   */
+  sendDelayedResponse(url, statsResponse, error=false) {
+    let responseBody = {}
 
-	buildSuccessResponse(stats) {
-		const response = {
-			response_type: 'in_channel',
-			text: 'Here are the detailed stats:',
-	    attachments: [{
-	    	fallback: util.format('This user has %d completions in total on PSN.', stats.completions),
-	    	fields: [
-	    		{
-	    			title: 'Total Completions',
-	    			value: stats.completions,
-	    			short: true
-	    		},
-	    		{
-	    			title: 'Completion Percentage',
-	    			value: Math.round(stats.completion_pct * 100) + '%',
-	    			short: true
-	    		}
-	    	],
-	    	color: 'good'
-	    }]
-		}
+    if (error && error.message) {
+      responseBody = responses.buildErrorResponse(error)
+    } else {
+      responseBody = responses.buildSuccessResponse(statsResponse)
+    }
 
-		return response
-	}
-
-	/**
-	 * Responds to the initial slack request in order to satisfy the 3sec initial response window.
-	 * 
-	 * @param  {object} response - the Express res object
-	 * @param  {string} username - the username included in the slack request
-	 */
-	initialResponse(res, username) {
-	  const initialResponse = this.buildInitialResponse(username)
-
-	  res.send(JSON.stringify(initialResponse))
-	}
-
-	/**
-	 * POSTs followup responses to the delayed response url included with the original slack request. Uses the Request package.
-	 * 
-	 * @param  {string} url - the url we will POST to
-	 * @param  {object} statsResponse - the statsResponse object built in raid.buildStatsResponse()
-	 * @param  {mixed} error - defaults false. if included, represents the Error object caught in a Promise
-	 */
-	delayedResponse(url, statsResponse, error=false) {
-	  let responseBody = {}
-
-	  if (error && error.message) {
-	    responseBody = this.buildErrorResponse(error)
-	  } else {
-	   	responseBody = this.buildSuccessResponse(statsResponse)
-	  }
-
-	  request.post(
-	    url, 
-	    {
-	      json: responseBody
-	    }
-	  )
-	}
+    request.post(
+      url, 
+      {
+        json: responseBody
+      }
+    )
+  }
 }
 
 const net = new Net()

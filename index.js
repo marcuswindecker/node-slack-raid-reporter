@@ -11,7 +11,7 @@ const raid = require('./dist/raid.js').default
 const app = express()
 
 // init request parsing lib
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 //------------- ENDPOINTS START HERE ------------------//
 app.post('/api/raid', (req, res) => {
@@ -20,18 +20,18 @@ app.post('/api/raid', (req, res) => {
   const username = req.body.text
   const delayedResponseUrl = req.body.response_url
 
-  net.initialResponse(res, username)
+  net.sendInitialResponse(res, username)
 
   raid.getPlayer(username)
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))
-    .then((stats) => raid.buildStatsResponse(stats))
+    .then((stats) => raid.formatStats(stats))
     .then((statsResponse) => {
-      net.delayedResponse(delayedResponseUrl, statsResponse)
+      net.sendDelayedResponse(delayedResponseUrl, statsResponse)
     })
     .catch((error) => {
-      net.delayedResponse(delayedResponseUrl, null, error)
+      net.sendDelayedResponse(delayedResponseUrl, null, error)
     })
 })
 
