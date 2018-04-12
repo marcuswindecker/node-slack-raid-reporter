@@ -8,7 +8,7 @@ class Raid {
   constructor() {
     this.traveler = new Traveler({
       apikey: process.env.BUNGIE_API_KEY,
-      userAgent: 'slack'
+      userAgent: 'the-speaker'
     })
 
     this.enums = require('the-traveler/build/enums')

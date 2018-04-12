@@ -27,7 +27,7 @@ var Raid = function () {
 
     this.traveler = new _theTraveler2.default({
       apikey: process.env.BUNGIE_API_KEY,
-      userAgent: 'slack'
+      userAgent: 'the-speaker'
     });
 
     this.enums = require('the-traveler/build/enums');
