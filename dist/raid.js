@@ -50,26 +50,26 @@ var Raid = function () {
           throw new Error('I don\'t understand that request :(');
         } else {
           var splitText = requestText.split(' ');
-          var platform = void 0,
-              username = void 0;
+          var _platform = void 0,
+              _username = void 0;
 
           if (splitText.length === 1) {
-            platform = 'psn';
-            username = splitText[0];
+            _platform = 'psn';
+            _username = splitText[0];
           } else if (splitText.length === 2) {
-            platform = splitText[0];
-            username = splitText[1];
+            _platform = splitText[0];
+            _username = splitText[1];
           } else {
             throw new Error('I don\'t understand that request :(');
           }
-
-          var parsedRequest = {
-            platform: platform,
-            username: username
-          };
-
-          resolve(parsedRequest);
         }
+
+        var parsedRequest = {
+          platform: platform,
+          username: username
+        };
+
+        resolve(parsedRequest);
       });
 
       return promise;

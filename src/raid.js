@@ -40,14 +40,14 @@ class Raid {
         else {
           throw new Error('I don\'t understand that request :(')
         }
-
-        const parsedRequest = {
-          platform: platform,
-          username: username
-        }
-
-        resolve(parsedRequest)
       }
+
+      const parsedRequest = {
+        platform: platform,
+        username: username
+      }
+
+      resolve(parsedRequest)
     })
 
     return promise
