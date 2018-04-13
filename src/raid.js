@@ -142,6 +142,8 @@ class Raid {
       throw new Error(util.format('Couldn\'t find %s on %s :(', this.username, this.platform.name))
     }
     else {
+      net.sendInitialResponse(res, username)
+      
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(

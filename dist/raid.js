@@ -190,6 +190,8 @@ var Raid = function () {
       if (!player.Response.length) {
         throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
       } else {
+        net.sendInitialResponse(res, username);
+
         this.membershipId = player.Response[0].membershipId;
 
         return this.traveler.getProfile(this.platform.code, this.membershipId, {

@@ -20,8 +20,6 @@ app.post('/api/raid', (req, res) => {
   const requestText = req.body.text
   const delayedResponseUrl = req.body.response_url
 
-  net.sendInitialResponse(res, username)
-
   raid.parseRequest(requestText)
     .then((parsedRequest) => raid.getPlayer(parsedRequest))
     .then((player) => raid.getProfile(player))
