@@ -34,45 +34,45 @@ Request:
 
 Initial Response:
 {
-  	response_type: 'in_channel',
-  	text: 'I\'m consulting with the Traveler...'
+    response_type: 'in_channel',
+    text: 'I\'m consulting with the Traveler...'
 }
 
 Delayed Response (success):
 {
-	  response_type: 'in_channel',
-	  text: 'Here are the detailed stats for <username> on <platform>'
-	  attachments: [{
-		    fallback: '<username> has <completion_count> completions in total on <platform>.',
-		    fields: [
-			      {
-				        title: 'Total Completions',
-				        value: <completion_count>,
-				        short: true
-			      },
-			      {
-				        title: 'Completion Percentage',
-				        value: <completion_percentage>,
-				        short: true
-			      },
-			      {
-				        title: 'Fastest Time',
-				        value: <fastest_time>,
-				        short: true
-		      	}
-		    ],
-		    color: 'good'
-	  }]
+    response_type: 'in_channel',
+    text: 'Here are the detailed stats for <username> on <platform>'
+    attachments: [{
+        fallback: '<username> has <completion_count> completions in total on <platform>.',
+        fields: [
+            {
+                title: 'Total Completions',
+                value: <completion_count>,
+                short: true
+            },
+            {
+                title: 'Completion Percentage',
+                value: <completion_percentage>,
+                short: true
+            },
+            {
+                title: 'Fastest Time',
+                value: <fastest_time>,
+                short: true
+            }
+        ],
+        color: 'good'
+    }]
 }
 
 Delayed Response (error):
 {
-	  response_type: 'in_channel',
-	  attachments: [{
-		    fallback: <error_message>,
-		    text: <error_message>,
-		    color: 'danger'
-	  }]
+    response_type: 'in_channel',
+    attachments: [{
+        fallback: <error_message>,
+        text: <error_message>,
+        color: 'danger'
+    }]
 }
 ```
 
@@ -82,8 +82,8 @@ The code in this repo may be stable or unstable at any given time. Beware! Maybe
 ## Roadmap:
 * Ability to specify a specific raid with the request i.e. `/speaker leviathan marcuswindecker`, `/speaker eaterofworlds marcuswindecker`
 * Include additional stats like:
-	* times: average, most recent
-	* dates: first, most recent
+  * times: average, most recent
+  * dates: first, most recent
 
 ## Acknowledgements
 * [The Traveler](https://github.com/alexanderwe/the-traveler) npm package from @alexanderwe - This package is the only reason this entire project came together. I can't express how happy I was to find this and how smooth it made the project.
