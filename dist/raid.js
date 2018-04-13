@@ -50,26 +50,26 @@ var Raid = function () {
           throw new Error('I don\'t understand that request :(');
         } else {
           var splitText = requestText.split(' ');
-          var _platform = void 0,
-              _username = void 0;
+          var platform = void 0,
+              username = void 0;
 
           if (splitText.length === 1) {
-            _platform = 'psn';
-            _username = splitText[0];
+            platform = 'psn';
+            username = splitText[0];
           } else if (splitText.length === 2) {
-            _platform = splitText[0];
-            _username = splitText[1];
+            platform = splitText[0];
+            username = splitText[1];
           } else {
             throw new Error('I don\'t understand that request :(');
           }
+
+          var parsedRequest = {
+            platform: platform,
+            username: username
+          };
+
+          resolve(parsedRequest);
         }
-
-        var parsedRequest = {
-          platform: platform,
-          username: username
-        };
-
-        resolve(parsedRequest);
       });
 
       return promise;
@@ -190,7 +190,7 @@ var Raid = function () {
       if (!player.Response.length) {
         throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
       } else {
-        net.sendInitialResponse(res, username);
+        net.sendInitialResponse(res, this.username);
 
         this.membershipId = player.Response[0].membershipId;
 
