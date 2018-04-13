@@ -1,5 +1,6 @@
 import Traveler from 'the-traveler'
 import prettyMs from 'pretty-ms'
+import util from 'util'
 
 /**
  * Handles data retrieval from The Traveler and formats stats
@@ -64,23 +65,32 @@ class Raid {
   getPlayer(platform, username) {
     switch(platform) {
       case 'pc':
-        this.platform = this.enums.BungieMembershipType.PC
-        break
+        this.platform = {
+          code: this.enums.BungieMembershipType.PC,
+          name: 'PC'
+        }
+      break
 
       case 'xbox':
-        this.platform = this.enums.BungieMembershipType.Xbox
-        break
+        this.platform = {
+          code: this.enums.BungieMembershipType.Xbox,
+          name: 'XBOX'
+        }
+      break
 
       case 'psn':
       default:
-        this.platform = this.enums.BungieMembershipType.PSN
-        break
+        this.platform = {
+          code: this.enums.BungieMembershipType.PSN,
+          name: 'PSN'
+        }
+      break
     }
 
     this.username = username
 
     return this.traveler.searchDestinyPlayer(
-      this.platform, 
+      this.platform.code, 
       this.username
     )
   }
@@ -94,7 +104,7 @@ class Raid {
    */
   getProfile(player) {
     if (!player.Response.length) {
-      throw new Error('Couldn\'t find that user on PSN :(')
+      throw new Error(util.format('Couldn\'t find %s on %s :(', this.username, this.platform.name))
     } else {
       this.membershipId = player.Response[0].membershipId
 

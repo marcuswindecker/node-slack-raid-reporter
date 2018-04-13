@@ -14,6 +14,10 @@ var _prettyMs = require('pretty-ms');
 
 var _prettyMs2 = _interopRequireDefault(_prettyMs);
 
+var _util = require('util');
+
+var _util2 = _interopRequireDefault(_util);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -111,22 +115,31 @@ var Raid = function () {
     value: function getPlayer(platform, username) {
       switch (platform) {
         case 'pc':
-          this.platform = this.enums.BungieMembershipType.PC;
+          this.platform = {
+            code: this.enums.BungieMembershipType.PC,
+            name: 'PC'
+          };
           break;
 
         case 'xbox':
-          this.platform = this.enums.BungieMembershipType.Xbox;
+          this.platform = {
+            code: this.enums.BungieMembershipType.Xbox,
+            name: 'XBOX'
+          };
           break;
 
         case 'psn':
         default:
-          this.platform = this.enums.BungieMembershipType.PSN;
+          this.platform = {
+            code: this.enums.BungieMembershipType.PSN,
+            name: 'PSN'
+          };
           break;
       }
 
       this.username = username;
 
-      return this.traveler.searchDestinyPlayer(this.platform, this.username);
+      return this.traveler.searchDestinyPlayer(this.platform.code, this.username);
     }
 
     /**
@@ -141,7 +154,7 @@ var Raid = function () {
     key: 'getProfile',
     value: function getProfile(player) {
       if (!player.Response.length) {
-        throw new Error('Couldn\'t find that user on PSN :(');
+        throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
       } else {
         this.membershipId = player.Response[0].membershipId;
 
