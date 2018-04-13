@@ -49,9 +49,9 @@ class Responses {
   buildSuccessResponse(stats) {
     const response = {
       response_type: 'in_channel',
-      text: 'Here are the detailed stats:',
+      text: util.format('Here are the detailed stats for %s on %s:', stats.username, stats.platform),
       attachments: [{
-        fallback: util.format('This user has %d completions in total on PSN.', stats.completions),
+        fallback: util.format('%s has %d completions in total on %s.', stats.username, stats.completions, stats.platform),
         fields: [
           {
             title: 'Total Completions',

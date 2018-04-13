@@ -7,6 +7,9 @@ import net from './net'
  * Handles data retrieval from The Traveler and formats stats
  */
 class Raid {
+  /*
+   * constructor
+   */
   constructor() {
     this.traveler = new Traveler({
       apikey: process.env.BUNGIE_API_KEY,
@@ -82,6 +85,8 @@ class Raid {
       }
 
       const formattedStats = {
+        username: this.username,
+        platform: this.platform.name,
         completions: completions,
         completion_pct: completions / entered,
         fastest_time: fastestTime

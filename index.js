@@ -25,8 +25,8 @@ app.post('/api/raid', (req, res) => {
   raid.parseRequest(requestText)
     .then((parsedRequest) => raid.getPlayer(parsedRequest))
     .then((player) => raid.getProfile(player))
-    .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))
+    .then((profile) => raid.getCharacterStats(profile))
     .then((stats) => raid.formatStats(stats))
     .then((formattedStats) => {
       net.sendDelayedResponse(delayedResponseUrl, formattedStats)

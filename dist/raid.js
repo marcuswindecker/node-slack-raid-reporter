@@ -30,6 +30,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Handles data retrieval from The Traveler and formats stats
  */
 var Raid = function () {
+  /*
+   * constructor
+   */
   function Raid() {
     _classCallCheck(this, Raid);
 
@@ -89,6 +92,8 @@ var Raid = function () {
   }, {
     key: 'formatStats',
     value: function formatStats(stats) {
+      var _this = this;
+
       var promise = new Promise(function (resolve) {
         var entered = 0;
         var completions = 0;
@@ -131,6 +136,8 @@ var Raid = function () {
         }
 
         var formattedStats = {
+          username: _this.username,
+          platform: _this.platform.name,
           completions: completions,
           completion_pct: completions / entered,
           fastest_time: fastestTime

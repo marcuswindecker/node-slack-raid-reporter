@@ -75,9 +75,9 @@ var Responses = function () {
     value: function buildSuccessResponse(stats) {
       var response = {
         response_type: 'in_channel',
-        text: 'Here are the detailed stats:',
+        text: _util2.default.format('Here are the detailed stats for %s on %s:', stats.username, stats.platform),
         attachments: [{
-          fallback: _util2.default.format('This user has %d completions in total on PSN.', stats.completions),
+          fallback: _util2.default.format('%s has %d completions in total on %s.', stats.username, stats.completions, stats.platform),
           fields: [{
             title: 'Total Completions',
             value: stats.completions,
