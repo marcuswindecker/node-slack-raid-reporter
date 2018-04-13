@@ -20,23 +20,19 @@ app.post('/api/raid', (req, res) => {
   const requestText = req.body.text
   const delayedResponseUrl = req.body.response_url
 
-  // net.sendInitialResponse(res, username)
+  net.sendInitialResponse(res, username)
 
   raid.parseRequest(requestText)
     .then((parsedRequest) => raid.getPlayer(parsedRequest))
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
-    // .then((profile) => raid.getActivityStats(profile))
+    .then((profile) => raid.getActivityStats(profile))
     .then((stats) => raid.formatStats(stats))
     .then((formattedStats) => {
-      net.sendInitialResponse(res, formattedStats)
-
-      // net.sendDelayedResponse(delayedResponseUrl, formattedStats)
+      net.sendDelayedResponse(delayedResponseUrl, formattedStats)
     })
     .catch((error) => {
-      console.log(error)
-
-      // net.sendDelayedResponse(delayedResponseUrl, null, error)
+      net.sendDelayedResponse(delayedResponseUrl, null, error)
     })
 })
 
