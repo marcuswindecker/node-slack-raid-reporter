@@ -158,7 +158,7 @@ var Raid = function () {
       } else {
         this.membershipId = player.Response[0].membershipId;
 
-        return this.traveler.getProfile(this.platform, this.membershipId, {
+        return this.traveler.getProfile(this.platform.code, this.membershipId, {
           components: this.enums.ComponentType.Profiles
         });
       }
@@ -186,7 +186,7 @@ var Raid = function () {
         for (var _iterator2 = this.characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var characterId = _step2.value;
 
-          promises.push(this.traveler.getHistoricalStats(this.platform, this.membershipId, characterId, {
+          promises.push(this.traveler.getHistoricalStats(this.platform.code, this.membershipId, characterId, {
             groups: this.enums.DestinyStatsGroupType.General,
             modes: this.enums.DestinyActivityModeType.Raid,
             periodType: this.enums.PeriodType.AllTime
@@ -232,7 +232,7 @@ var Raid = function () {
         for (var _iterator3 = this.characterIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var characterId = _step3.value;
 
-          promises.push(this.traveler.getAggregateActivityStats(this.platform, this.membershipId, characterId));
+          promises.push(this.traveler.getAggregateActivityStats(this.platform.code, this.membershipId, characterId));
         }
       } catch (err) {
         _didIteratorError3 = true;

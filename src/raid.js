@@ -109,7 +109,7 @@ class Raid {
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(
-        this.platform, 
+        this.platform.code, 
         this.membershipId, 
         { 
           components: this.enums.ComponentType.Profiles
@@ -132,7 +132,7 @@ class Raid {
     for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getHistoricalStats(
-          this.platform, 
+          this.platform.code, 
           this.membershipId, 
           characterId, 
           { 
@@ -161,7 +161,7 @@ class Raid {
     for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getAggregateActivityStats(
-          this.platform, 
+          this.platform.code, 
           this.membershipId, 
           characterId
         )
