@@ -40,14 +40,14 @@ class Raid {
         else {
           throw new Error('I don\'t understand that request :(')
         }
-      }
 
-      const parsedRequest = {
-        platform: platform,
-        username: username
-      }
+        const parsedRequest = {
+          platform: platform,
+          username: username
+        }
 
-      resolve(parsedRequest)
+        resolve(parsedRequest)
+      }
     })
 
     return promise
@@ -142,8 +142,8 @@ class Raid {
       throw new Error(util.format('Couldn\'t find %s on %s :(', this.username, this.platform.name))
     }
     else {
-      net.sendInitialResponse(res, username)
-      
+      net.sendInitialResponse(res, this.username)
+
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(
