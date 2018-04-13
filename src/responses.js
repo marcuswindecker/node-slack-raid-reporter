@@ -12,10 +12,10 @@ class Responses {
    * @param  {string} username - the username sent with the initial Slack request
    * @return {object} response - the initial response body to send back to Slack
    */
-  buildInitialResponse(username) {
+  buildInitialResponse() {
     const response = {
       response_type: 'in_channel',
-      text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+      text: 'Processing request!'
     }
 
     return response

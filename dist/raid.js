@@ -18,7 +18,7 @@ var _util = require('util');
 
 var _util2 = _interopRequireDefault(_util);
 
-var _net = require('../net');
+var _net = require('./net');
 
 var _net2 = _interopRequireDefault(_net);
 
@@ -194,8 +194,6 @@ var Raid = function () {
       if (!player.Response.length) {
         throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
       } else {
-        _net2.default.sendInitialResponse(res, this.username);
-
         this.membershipId = player.Response[0].membershipId;
 
         return this.traveler.getProfile(this.platform.code, this.membershipId, {

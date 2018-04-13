@@ -13,8 +13,8 @@ class Net {
    * @param  {object} response - the Express res object
    * @param  {string} username - the username included in the slack request
    */
-  sendInitialResponse(res, username) {
-    const initialResponse = responses.buildInitialResponse(username)
+  sendInitialResponse(res) {
+    const initialResponse = responses.buildInitialResponse()
 
     res.send(JSON.stringify(initialResponse))
   }

@@ -1,7 +1,7 @@
 import Traveler from 'the-traveler'
 import prettyMs from 'pretty-ms'
 import util from 'util'
-import net from '../net'
+import net from './net'
 
 /**
  * Handles data retrieval from The Traveler and formats stats
@@ -143,8 +143,6 @@ class Raid {
       throw new Error(util.format('Couldn\'t find %s on %s :(', this.username, this.platform.name))
     }
     else {
-      net.sendInitialResponse(res, this.username)
-
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(

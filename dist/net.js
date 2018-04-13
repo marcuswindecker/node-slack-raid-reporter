@@ -36,8 +36,8 @@ var Net = function () {
 
   _createClass(Net, [{
     key: 'sendInitialResponse',
-    value: function sendInitialResponse(res, username) {
-      var initialResponse = _responses2.default.buildInitialResponse(username);
+    value: function sendInitialResponse(res) {
+      var initialResponse = _responses2.default.buildInitialResponse();
 
       res.send(JSON.stringify(initialResponse));
     }

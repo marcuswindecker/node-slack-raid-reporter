@@ -32,10 +32,10 @@ var Responses = function () {
 
   _createClass(Responses, [{
     key: 'buildInitialResponse',
-    value: function buildInitialResponse(username) {
+    value: function buildInitialResponse() {
       var response = {
         response_type: 'in_channel',
-        text: _util2.default.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+        text: 'Processing request!'
       };
 
       return response;
