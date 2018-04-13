@@ -18,6 +18,10 @@ var _util = require('util');
 
 var _util2 = _interopRequireDefault(_util);
 
+var _net = require('../net');
+
+var _net2 = _interopRequireDefault(_net);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -190,7 +194,7 @@ var Raid = function () {
       if (!player.Response.length) {
         throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
       } else {
-        net.sendInitialResponse(res, this.username);
+        _net2.default.sendInitialResponse(res, this.username);
 
         this.membershipId = player.Response[0].membershipId;
 

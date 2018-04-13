@@ -1,6 +1,7 @@
 import Traveler from 'the-traveler'
 import prettyMs from 'pretty-ms'
 import util from 'util'
+import net from '../net'
 
 /**
  * Handles data retrieval from The Traveler and formats stats
