@@ -20,6 +20,39 @@ class Raid {
     }
   }
 
+  parseRequest(requestText) {
+    const promise = new Promise((resolve) => {
+      if (requestText === '') {
+        throw new Error('I don\'t understand that request :(')
+      }
+      else {
+        const splitText = requestText.split(' ')
+        let platform, username
+
+        if (splitText.length === 1) {
+          platform = 'psn'
+          username = splitText[0]
+        }
+        else if (splitText.length === 2) {
+          platform = splitText[0]
+          username = splitText[1]
+        }
+        else {
+          throw new Error('I don\'t understand that request :(')
+        }
+
+        const parsedRequest = {
+          platform: platform,
+          username: username
+        }
+
+        resolve(parsedRequest)
+      }
+    })
+
+    return promise
+  }
+
   /**
    * Formats the object we'll use to send data back to Slack
    * 
@@ -58,11 +91,13 @@ class Raid {
   /**
    * Retrieves a Player object from the Bungie API
    *
-   * @param  {string} platform - the platform ('xbox', 'psn', 'pc') included in the slack request. Default: 'psn'
-   * @param  {string} username - the username included in the slack request
+   * @param {string} parsedRequest - the request text from Slack after it's been through this.parseRequest()
    * @return {Promise} - resolves to a Player object from the Bungie API
    */
-  getPlayer(platform, username) {
+  getPlayer(parsedRequest) {
+    const platform = parsedRequest.platform
+    const username = parsedRequest.username
+
     switch(platform) {
       case 'pc':
         this.platform = {
@@ -105,7 +140,8 @@ class Raid {
   getProfile(player) {
     if (!player.Response.length) {
       throw new Error(util.format('Couldn\'t find %s on %s :(', this.username, this.platform.name))
-    } else {
+    }
+    else {
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(

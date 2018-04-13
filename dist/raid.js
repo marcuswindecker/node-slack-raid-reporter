@@ -42,15 +42,47 @@ var Raid = function () {
     };
   }
 
-  /**
-   * Formats the object we'll use to send data back to Slack
-   * 
-   * @param  {object} stats - the Stats object retrieved in one of: this.getCharacterStats(), this.getActivityStats()
-   * @return {Promise} - Resolves after all of the stats are calculated and the formattedStats object built
-   */
-
-
   _createClass(Raid, [{
+    key: 'parseRequest',
+    value: function parseRequest(requestText) {
+      var promise = new Promise(function (resolve) {
+        if (requestText === '') {
+          throw new Error('I don\'t understand that request :(');
+        } else {
+          var splitText = requestText.split(' ');
+          var platform = void 0,
+              username = void 0;
+
+          if (splitText.length === 1) {
+            platform = 'psn';
+            username = splitText[0];
+          } else if (splitText.length === 2) {
+            platform = splitText[0];
+            username = splitText[1];
+          } else {
+            throw new Error('I don\'t understand that request :(');
+          }
+
+          var parsedRequest = {
+            platform: platform,
+            username: username
+          };
+
+          resolve(parsedRequest);
+        }
+      });
+
+      return promise;
+    }
+
+    /**
+     * Formats the object we'll use to send data back to Slack
+     * 
+     * @param  {object} stats - the Stats object retrieved in one of: this.getCharacterStats(), this.getActivityStats()
+     * @return {Promise} - Resolves after all of the stats are calculated and the formattedStats object built
+     */
+
+  }, {
     key: 'formatStats',
     value: function formatStats(stats) {
       var promise = new Promise(function (resolve) {
@@ -105,14 +137,16 @@ var Raid = function () {
     /**
      * Retrieves a Player object from the Bungie API
      *
-     * @param  {string} platform - the platform ('xbox', 'psn', 'pc') included in the slack request. Default: 'psn'
-     * @param  {string} username - the username included in the slack request
+     * @param {string} parsedRequest - the request text from Slack after it's been through this.parseRequest()
      * @return {Promise} - resolves to a Player object from the Bungie API
      */
 
   }, {
     key: 'getPlayer',
-    value: function getPlayer(platform, username) {
+    value: function getPlayer(parsedRequest) {
+      var platform = parsedRequest.platform;
+      var username = parsedRequest.username;
+
       switch (platform) {
         case 'pc':
           this.platform = {

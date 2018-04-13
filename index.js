@@ -17,23 +17,26 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.post('/api/raid', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
-  const username = req.body.text
-  const platform = 'psn'
-
+  const requestText = req.body.text
   const delayedResponseUrl = req.body.response_url
 
-  net.sendInitialResponse(res, username)
+  // net.sendInitialResponse(res, username)
 
-  raid.getPlayer(platform, username)
+  raid.parseRequest(requestText)
+    .then((parsedRequest) => raid.getPlayer(parsedRequest))
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))
     .then((stats) => raid.formatStats(stats))
     .then((formattedStats) => {
-      net.sendDelayedResponse(delayedResponseUrl, formattedStats)
+      net.sendInitialResponse(res, formattedStats)
+
+      // net.sendDelayedResponse(delayedResponseUrl, formattedStats)
     })
     .catch((error) => {
-      net.sendDelayedResponse(delayedResponseUrl, null, error)
+      console.log(error)
+
+      // net.sendDelayedResponse(delayedResponseUrl, null, error)
     })
 })
 

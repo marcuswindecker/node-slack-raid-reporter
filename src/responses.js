@@ -15,7 +15,8 @@ class Responses {
   buildInitialResponse(username) {
     const response = {
       response_type: 'in_channel',
-      text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+      // text: util.format('Processing request! Here\'s the raid.report in the meantime: https://raid.report/ps/%s', username)
+      text: username
     }
 
     return response
