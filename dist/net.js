@@ -39,6 +39,7 @@ var Net = function () {
     value: function sendInitialResponse(res) {
       var initialResponse = _responses2.default.buildInitialResponse();
 
+      // send the initial response
       res.send(JSON.stringify(initialResponse));
     }
 
@@ -57,12 +58,14 @@ var Net = function () {
 
       var responseBody = {};
 
+      // determine if an error response or success response needs to be sent
       if (error && error.message) {
         responseBody = _responses2.default.buildErrorResponse(error);
       } else {
         responseBody = _responses2.default.buildSuccessResponse(statsResponse);
       }
 
+      // send the delayed response
       _request2.default.post(url, {
         json: responseBody
       });

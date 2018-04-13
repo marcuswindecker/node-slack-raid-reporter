@@ -36,39 +36,55 @@ var Raid = function () {
   function Raid() {
     _classCallCheck(this, Raid);
 
+    // init the traveler and enumerations
     this.traveler = new _theTraveler2.default({
       apikey: process.env.BUNGIE_API_KEY,
       userAgent: 'the-speaker'
     });
-
     this.enums = require('the-traveler/build/enums');
 
+    // store activity hash values for later use
     this.activityHashes = {
       leviathan: '2693136602',
       eaterOfWorlds: '3089205900'
     };
   }
 
+  /**
+   * Parses the request text from Slack into an object
+   * 
+   * @param  {string} requestText - the request text from Slack
+   * @throws {Error} - throws an error if the request text is blank or contains too many params
+   * @return {Promise} - resolves to an object containing the player's username and platform
+   */
+
+
   _createClass(Raid, [{
     key: 'parseRequest',
     value: function parseRequest(requestText) {
       var promise = new Promise(function (resolve) {
         if (requestText === '') {
+          // no params sent
           throw new Error('I don\'t understand that request :(');
         } else {
+          // split the request text at the space character
           var splitText = requestText.split(' ');
           var platform = void 0,
               username = void 0;
 
+          // no platform is present - default to PSN
           if (splitText.length === 1) {
             platform = 'psn';
             username = splitText[0];
-          } else if (splitText.length === 2) {
-            platform = splitText[0];
-            username = splitText[1];
-          } else {
-            throw new Error('I don\'t understand that request :(');
           }
+          //platform is present
+          else if (splitText.length === 2) {
+              platform = splitText[0];
+              username = splitText[1];
+            } else {
+              // too many params sent
+              throw new Error('I don\'t understand that request :(');
+            }
 
           var parsedRequest = {
             platform: platform,
@@ -99,6 +115,7 @@ var Raid = function () {
         var completions = 0;
         var fastestTimes = [];
 
+        // loop over the characters and consolidate their stats
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -110,10 +127,13 @@ var Raid = function () {
             entered += character.Response.raid.allTime.activitiesEntered.basic.value;
             completions += character.Response.raid.allTime.activitiesCleared.basic.value;
 
+            // exclude characters that haven't completed the raid
             if (character.Response.raid.allTime.fastestCompletionMs.basic.value > 0) {
               fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value);
             }
           }
+
+          // handle the 0ms case - what causes it (ex: psn-jfernandez1988)? 
         } catch (err) {
           _didIteratorError = true;
           _iteratorError = err;
@@ -130,11 +150,12 @@ var Raid = function () {
         }
 
         var fastestTime = 0;
-
         if (fastestTimes.length) {
+          // convert the fastest time from ms to a readable time
           fastestTime = (0, _prettyMs2.default)(Math.min.apply(Math, fastestTimes), { secDecimalDigits: 0 });
         }
 
+        // put all the good stuff together
         var formattedStats = {
           username: _this.username,
           platform: _this.platform.name,
@@ -162,6 +183,7 @@ var Raid = function () {
       var platform = parsedRequest.platform;
       var username = parsedRequest.username;
 
+      // set the platform and username class properties
       switch (platform) {
         case 'pc':
           this.platform = {
@@ -202,15 +224,18 @@ var Raid = function () {
   }, {
     key: 'getProfile',
     value: function getProfile(player) {
+      // player wasn't found
       if (!player.Response.length) {
         throw new Error(_util2.default.format('Couldn\'t find %s on %s :(', this.username, this.platform.name));
-      } else {
-        this.membershipId = player.Response[0].membershipId;
-
-        return this.traveler.getProfile(this.platform.code, this.membershipId, {
-          components: this.enums.ComponentType.Profiles
-        });
       }
+      // player was found
+      else {
+          this.membershipId = player.Response[0].membershipId;
+
+          return this.traveler.getProfile(this.platform.code, this.membershipId, {
+            components: this.enums.ComponentType.Profiles
+          });
+        }
     }
 
     /**
@@ -227,6 +252,7 @@ var Raid = function () {
 
       var promises = [];
 
+      // build a separate promise to get stats for each character
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -273,6 +299,7 @@ var Raid = function () {
 
       var promises = [];
 
+      // build a separate promise to get stats for each character
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;

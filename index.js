@@ -17,23 +17,31 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.post('/api/raid', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
+  // send an initial response in order to satisfy the 3sec Slack timeout
   net.sendInitialResponse(res)
 
   const requestText = req.body.text
   const delayedResponseUrl = req.body.response_url
 
+  // parse the request
   raid.parseRequest(requestText)
+    // get the player definition
     .then((parsedRequest) => raid.getPlayer(parsedRequest))
+    // get the player's profile
     .then((player) => raid.getProfile(player))
-    // .then((profile) => raid.getActivityStats(profile))
+    // get stats for the player's characters
     .then((profile) => raid.getCharacterStats(profile))
+    // format the stats into an easier object to work with
     .then((stats) => raid.formatStats(stats))
     .then((formattedStats) => {
+      // send the delayed response with the formatted stats
       net.sendDelayedResponse(delayedResponseUrl, formattedStats)
     })
+    // an error was caught somewhere in the promise chain
     .catch((error) => {
       console.log(error)
 
+      // send a delayed response with the error 
       net.sendDelayedResponse(delayedResponseUrl, null, error)
     })
 })

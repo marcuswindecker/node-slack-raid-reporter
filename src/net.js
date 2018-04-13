@@ -16,6 +16,7 @@ class Net {
   sendInitialResponse(res) {
     const initialResponse = responses.buildInitialResponse()
 
+    // send the initial response
     res.send(JSON.stringify(initialResponse))
   }
 
@@ -29,12 +30,14 @@ class Net {
   sendDelayedResponse(url, statsResponse, error=false) {
     let responseBody = {}
 
+    // determine if an error response or success response needs to be sent
     if (error && error.message) {
       responseBody = responses.buildErrorResponse(error)
     } else {
       responseBody = responses.buildSuccessResponse(statsResponse)
     }
 
+    // send the delayed response
     request.post(url, {
       json: responseBody
     })
