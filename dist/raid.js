@@ -100,15 +100,33 @@ var Raid = function () {
 
     /**
      * Retrieves a Player object from the Bungie API
-     * 
+     *
+     * @param  {string} platform - the platform ('xbox', 'psn', 'pc') included in the slack request. Default: 'psn'
      * @param  {string} username - the username included in the slack request
      * @return {Promise} - resolves to a Player object from the Bungie API
      */
 
   }, {
     key: 'getPlayer',
-    value: function getPlayer(username) {
-      return this.traveler.searchDestinyPlayer(this.enums.BungieMembershipType.PSN, username);
+    value: function getPlayer(platform, username) {
+      switch (platform) {
+        case 'pc':
+          this.platform = this.enums.BungieMembershipType.PC;
+          break;
+
+        case 'xbox':
+          this.platform = this.enums.BungieMembershipType.Xbox;
+          break;
+
+        case 'psn':
+        default:
+          this.platform = this.enums.BungieMembershipType.PSN;
+          break;
+      }
+
+      this.username = username;
+
+      return this.traveler.searchDestinyPlayer(this.platform, this.username);
     }
 
     /**
@@ -125,9 +143,9 @@ var Raid = function () {
       if (!player.Response.length) {
         throw new Error('Couldn\'t find that user on PSN :(');
       } else {
-        var membershipId = player.Response[0].membershipId;
+        this.membershipId = player.Response[0].membershipId;
 
-        return this.traveler.getProfile(this.enums.BungieMembershipType.PSN, membershipId, {
+        return this.traveler.getProfile(this.platform, this.membershipId, {
           components: this.enums.ComponentType.Profiles
         });
       }
@@ -143,8 +161,7 @@ var Raid = function () {
   }, {
     key: 'getCharacterStats',
     value: function getCharacterStats(profile) {
-      var membershipId = profile.Response.profile.data.userInfo.membershipId;
-      var characterIds = profile.Response.profile.data.characterIds;
+      this.characterIds = profile.Response.profile.data.characterIds;
 
       var promises = [];
 
@@ -153,10 +170,10 @@ var Raid = function () {
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (var _iterator2 = this.characterIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var characterId = _step2.value;
 
-          promises.push(this.traveler.getHistoricalStats(this.enums.BungieMembershipType.PSN, membershipId, characterId, {
+          promises.push(this.traveler.getHistoricalStats(this.platform, this.membershipId, characterId, {
             groups: this.enums.DestinyStatsGroupType.General,
             modes: this.enums.DestinyActivityModeType.Raid,
             periodType: this.enums.PeriodType.AllTime
@@ -190,8 +207,7 @@ var Raid = function () {
   }, {
     key: 'getActivityStats',
     value: function getActivityStats(profile) {
-      var membershipId = profile.Response.profile.data.userInfo.membershipId;
-      var characterIds = profile.Response.profile.data.characterIds;
+      this.characterIds = profile.Response.profile.data.characterIds;
 
       var promises = [];
 
@@ -200,10 +216,10 @@ var Raid = function () {
       var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator3 = characterIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (var _iterator3 = this.characterIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var characterId = _step3.value;
 
-          promises.push(this.traveler.getAggregateActivityStats(this.enums.BungieMembershipType.PSN, membershipId, characterId));
+          promises.push(this.traveler.getAggregateActivityStats(this.platform, this.membershipId, characterId));
         }
       } catch (err) {
         _didIteratorError3 = true;

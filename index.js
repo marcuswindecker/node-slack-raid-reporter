@@ -18,11 +18,13 @@ app.post('/api/raid', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
 
   const username = req.body.text
+  const platform = 'psn'
+
   const delayedResponseUrl = req.body.response_url
 
   net.sendInitialResponse(res, username)
 
-  raid.getPlayer(username)
+  raid.getPlayer(platform, username)
     .then((player) => raid.getProfile(player))
     .then((profile) => raid.getCharacterStats(profile))
     // .then((profile) => raid.getActivityStats(profile))

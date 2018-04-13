@@ -56,14 +56,32 @@ class Raid {
 
   /**
    * Retrieves a Player object from the Bungie API
-   * 
+   *
+   * @param  {string} platform - the platform ('xbox', 'psn', 'pc') included in the slack request. Default: 'psn'
    * @param  {string} username - the username included in the slack request
    * @return {Promise} - resolves to a Player object from the Bungie API
    */
-  getPlayer(username) {
+  getPlayer(platform, username) {
+    switch(platform) {
+      case 'pc':
+        this.platform = this.enums.BungieMembershipType.PC
+        break
+
+      case 'xbox':
+        this.platform = this.enums.BungieMembershipType.Xbox
+        break
+
+      case 'psn':
+      default:
+        this.platform = this.enums.BungieMembershipType.PSN
+        break
+    }
+
+    this.username = username
+
     return this.traveler.searchDestinyPlayer(
-      this.enums.BungieMembershipType.PSN, 
-      username
+      this.platform, 
+      this.username
     )
   }
 
@@ -78,11 +96,11 @@ class Raid {
     if (!player.Response.length) {
       throw new Error('Couldn\'t find that user on PSN :(')
     } else {
-      const membershipId = player.Response[0].membershipId
+      this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(
-        this.enums.BungieMembershipType.PSN, 
-        membershipId, 
+        this.platform, 
+        this.membershipId, 
         { 
           components: this.enums.ComponentType.Profiles
         }
@@ -97,16 +115,15 @@ class Raid {
    * @return {Promise} - issues a Character Stats request for each character in the profile and merge the results into a single resolved Promise
    */
   getCharacterStats(profile) {
-    const membershipId = profile.Response.profile.data.userInfo.membershipId
-    const characterIds = profile.Response.profile.data.characterIds
+    this.characterIds = profile.Response.profile.data.characterIds
 
     let promises = []
 
-    for (const characterId of characterIds) {
+    for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getHistoricalStats(
-          this.enums.BungieMembershipType.PSN, 
-          membershipId, 
+          this.platform, 
+          this.membershipId, 
           characterId, 
           { 
             groups: this.enums.DestinyStatsGroupType.General, 
@@ -127,16 +144,15 @@ class Raid {
    * @return {Promise} - issues an Activity Stats request for each character in the profile and merge the results into a single resolved Promise
    */
   getActivityStats(profile) {
-    const membershipId = profile.Response.profile.data.userInfo.membershipId
-    const characterIds = profile.Response.profile.data.characterIds
+    this.characterIds = profile.Response.profile.data.characterIds
 
     let promises = []
 
-    for (const characterId of characterIds) {
+    for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getAggregateActivityStats(
-          this.enums.BungieMembershipType.PSN, 
-          membershipId, 
+          this.platform, 
+          this.membershipId, 
           characterId
         )
       )
