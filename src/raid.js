@@ -75,7 +75,11 @@ class Raid {
         }
       }
 
-      const fastestTime = prettyMs(Math.min(...fastestTimes), { secDecimalDigits: 0 })
+      let fastestTime = 0
+
+      if (fastestTimes.length) {
+        fastestTime = prettyMs(Math.min(...fastestTimes), { secDecimalDigits: 0 })
+      }
 
       const formattedStats = {
         completions: completions,

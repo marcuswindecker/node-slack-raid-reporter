@@ -35,7 +35,7 @@ var Responses = function () {
     value: function buildInitialResponse() {
       var response = {
         response_type: 'in_channel',
-        text: 'Processing request!'
+        text: 'I\'m consulting with the Traveler...'
       };
 
       return response;

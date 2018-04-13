@@ -124,7 +124,11 @@ var Raid = function () {
           }
         }
 
-        var fastestTime = (0, _prettyMs2.default)(Math.min.apply(Math, fastestTimes), { secDecimalDigits: 0 });
+        var fastestTime = 0;
+
+        if (fastestTimes.length) {
+          fastestTime = (0, _prettyMs2.default)(Math.min.apply(Math, fastestTimes), { secDecimalDigits: 0 });
+        }
 
         var formattedStats = {
           completions: completions,
