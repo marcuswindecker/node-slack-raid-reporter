@@ -18,13 +18,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Helper library used to build Response bodies
  */
 var Responses = function () {
+
+  /**
+   * @constructor
+   */
   function Responses() {
     _classCallCheck(this, Responses);
   }
 
   /**
    * Builds the initial response sent back to satisfy the 3sec Slack timeout
-   * 
+   *
    * @param  {string} username - the username sent with the initial Slack request
    * @return {object} response - the initial response body to send back to Slack
    */
@@ -43,7 +47,7 @@ var Responses = function () {
 
     /**
      * Builds an error response to send back to Slack
-     * 
+     *
      * @param  {Error} error - an Error object
      * @return {object} response - the error response body to send back to Slack
      */
@@ -65,7 +69,7 @@ var Responses = function () {
 
     /**
      * Builds a success response to send back to Slack
-     * 
+     *
      * @param  {object} stats - the formatted stats object
      * @return {object} response - the success response body to send back to Slack
      */

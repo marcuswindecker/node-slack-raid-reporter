@@ -14,7 +14,6 @@
         "quotes": ["error", "single", {"avoidEscape": true}],
         "semi": ["error", "never"],
         "comma-spacing": ["error"],
-        "camelcase": ["error"],
         "eqeqeq": ["error"],
         "space-before-blocks": ["error"],
         "space-in-parens": ["error"],

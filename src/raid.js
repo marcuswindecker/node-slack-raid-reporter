@@ -1,22 +1,25 @@
 import Traveler from 'the-traveler'
 import prettyMs from 'pretty-ms'
 import util from 'util'
-import net from './net'
 
 /**
  * Handles data retrieval from The Traveler and formats stats
  */
 class Raid {
-  /*
-   * constructor
+
+  /**
+   * @constructor
    */
   constructor() {
+
+    /* eslint-disable no-undef */
     // init the traveler and enumerations
     this.traveler = new Traveler({
       apikey: process.env.BUNGIE_API_KEY,
       userAgent: 'the-speaker'
     })
     this.enums = require('the-traveler/build/enums')
+    /* eslint-enable no-undef */
 
     // store activity hash values for later use
     this.activityHashes = {
@@ -27,7 +30,7 @@ class Raid {
 
   /**
    * Parses the request text from Slack into an object
-   * 
+   *
    * @param  {string} requestText - the request text from Slack
    * @throws {Error} - throws an error if the request text is blank or contains too many params
    * @return {Promise} - resolves to an object containing the player's username and platform
@@ -48,7 +51,7 @@ class Raid {
           platform = 'psn'
           username = splitText[0]
         }
-        //platform is present
+        // platform is present
         else if (splitText.length === 2) {
           platform = splitText[0]
           username = splitText[1]
@@ -72,7 +75,7 @@ class Raid {
 
   /**
    * Formats the object we'll use to send data back to Slack
-   * 
+   *
    * @param  {object} stats - the Stats object retrieved in one of: this.getCharacterStats(), this.getActivityStats()
    * @return {Promise} - Resolves after all of the stats are calculated and the formattedStats object built
    */
@@ -86,14 +89,14 @@ class Raid {
       for (const character of stats) {
         entered += character.Response.raid.allTime.activitiesEntered.basic.value
         completions += character.Response.raid.allTime.activitiesCleared.basic.value
-        
+
         // exclude characters that haven't completed the raid
         if (character.Response.raid.allTime.fastestCompletionMs.basic.value > 0) {
           fastestTimes.push(character.Response.raid.allTime.fastestCompletionMs.basic.value)
         }
       }
 
-      // handle the 0ms case - what causes it (ex: psn-jfernandez1988)? 
+      // handle the 0ms case - what causes it (ex: psn-jfernandez1988)?
       let fastestTime = 0
       if (fastestTimes.length) {
         // convert the fastest time from ms to a readable time
@@ -126,20 +129,20 @@ class Raid {
     const username = parsedRequest.username
 
     // set the platform and username class properties
-    switch(platform) {
+    switch (platform) {
       case 'pc':
         this.platform = {
           code: this.enums.BungieMembershipType.PC,
           name: 'PC'
         }
-      break
+        break
 
       case 'xbox':
         this.platform = {
           code: this.enums.BungieMembershipType.Xbox,
           name: 'XBOX'
         }
-      break
+        break
 
       case 'psn':
       default:
@@ -147,20 +150,20 @@ class Raid {
           code: this.enums.BungieMembershipType.PSN,
           name: 'PSN'
         }
-      break
+        break
     }
 
     this.username = username
 
     return this.traveler.searchDestinyPlayer(
-      this.platform.code, 
+      this.platform.code,
       this.username
     )
   }
 
   /**
-   * Retrieves a Profile object from the Bungie API 
-   * 
+   * Retrieves a Profile object from the Bungie API
+   *
    * @param  {object} player - the Player object retrieved in getPlayer()
    * @throws {Error} - throws an Error if the Player data wasn't populated in the response from getPlayer()
    * @return {Promise} - resolves to a Profile object from the Bungie API
@@ -175,9 +178,9 @@ class Raid {
       this.membershipId = player.Response[0].membershipId
 
       return this.traveler.getProfile(
-        this.platform.code, 
-        this.membershipId, 
-        { 
+        this.platform.code,
+        this.membershipId,
+        {
           components: this.enums.ComponentType.Profiles
         }
       )
@@ -186,26 +189,26 @@ class Raid {
 
   /**
    * Retrieves a Character Stats object from the Bungie API
-   * 
+   *
    * @param  {object} profile - the Profile object retrieved in getProfile()
    * @return {Promise} - issues a Character Stats request for each character in the profile and merge the results into a single resolved Promise
    */
   getCharacterStats(profile) {
     this.characterIds = profile.Response.profile.data.characterIds
 
-    let promises = []
+    const promises = []
 
     // build a separate promise to get stats for each character
     for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getHistoricalStats(
-          this.platform.code, 
-          this.membershipId, 
-          characterId, 
-          { 
-            groups: this.enums.DestinyStatsGroupType.General, 
-            modes: this.enums.DestinyActivityModeType.Raid, 
-            periodType: this.enums.PeriodType.AllTime 
+          this.platform.code,
+          this.membershipId,
+          characterId,
+          {
+            groups: this.enums.DestinyStatsGroupType.General,
+            modes: this.enums.DestinyActivityModeType.Raid,
+            periodType: this.enums.PeriodType.AllTime
           }
         )
       )
@@ -216,21 +219,21 @@ class Raid {
 
   /**
    * Retrieves an Activity Stats object from the Bungie API
-   * 
+   *
    * @param  {object} profile - the Profile object retrieved in getProfile()
    * @return {Promise} - issues an Activity Stats request for each character in the profile and merge the results into a single resolved Promise
    */
   getActivityStats(profile) {
     this.characterIds = profile.Response.profile.data.characterIds
 
-    let promises = []
+    const promises = []
 
     // build a separate promise to get stats for each character
     for (const characterId of this.characterIds) {
       promises.push(
         this.traveler.getAggregateActivityStats(
-          this.platform.code, 
-          this.membershipId, 
+          this.platform.code,
+          this.membershipId,
           characterId
         )
       )

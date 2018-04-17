@@ -18,10 +18,6 @@ var _util = require('util');
 
 var _util2 = _interopRequireDefault(_util);
 
-var _net = require('./net');
-
-var _net2 = _interopRequireDefault(_net);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30,18 +26,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Handles data retrieval from The Traveler and formats stats
  */
 var Raid = function () {
-  /*
-   * constructor
+
+  /**
+   * @constructor
    */
   function Raid() {
     _classCallCheck(this, Raid);
 
+    /* eslint-disable no-undef */
     // init the traveler and enumerations
     this.traveler = new _theTraveler2.default({
       apikey: process.env.BUNGIE_API_KEY,
       userAgent: 'the-speaker'
     });
     this.enums = require('the-traveler/build/enums');
+    /* eslint-enable no-undef */
 
     // store activity hash values for later use
     this.activityHashes = {
@@ -52,7 +51,7 @@ var Raid = function () {
 
   /**
    * Parses the request text from Slack into an object
-   * 
+   *
    * @param  {string} requestText - the request text from Slack
    * @throws {Error} - throws an error if the request text is blank or contains too many params
    * @return {Promise} - resolves to an object containing the player's username and platform
@@ -77,7 +76,7 @@ var Raid = function () {
             platform = 'psn';
             username = splitText[0];
           }
-          //platform is present
+          // platform is present
           else if (splitText.length === 2) {
               platform = splitText[0];
               username = splitText[1];
@@ -100,7 +99,7 @@ var Raid = function () {
 
     /**
      * Formats the object we'll use to send data back to Slack
-     * 
+     *
      * @param  {object} stats - the Stats object retrieved in one of: this.getCharacterStats(), this.getActivityStats()
      * @return {Promise} - Resolves after all of the stats are calculated and the formattedStats object built
      */
@@ -133,7 +132,7 @@ var Raid = function () {
             }
           }
 
-          // handle the 0ms case - what causes it (ex: psn-jfernandez1988)? 
+          // handle the 0ms case - what causes it (ex: psn-jfernandez1988)?
         } catch (err) {
           _didIteratorError = true;
           _iteratorError = err;
@@ -214,8 +213,8 @@ var Raid = function () {
     }
 
     /**
-     * Retrieves a Profile object from the Bungie API 
-     * 
+     * Retrieves a Profile object from the Bungie API
+     *
      * @param  {object} player - the Player object retrieved in getPlayer()
      * @throws {Error} - throws an Error if the Player data wasn't populated in the response from getPlayer()
      * @return {Promise} - resolves to a Profile object from the Bungie API
@@ -240,7 +239,7 @@ var Raid = function () {
 
     /**
      * Retrieves a Character Stats object from the Bungie API
-     * 
+     *
      * @param  {object} profile - the Profile object retrieved in getProfile()
      * @return {Promise} - issues a Character Stats request for each character in the profile and merge the results into a single resolved Promise
      */
@@ -287,7 +286,7 @@ var Raid = function () {
 
     /**
      * Retrieves an Activity Stats object from the Bungie API
-     * 
+     *
      * @param  {object} profile - the Profile object retrieved in getProfile()
      * @return {Promise} - issues an Activity Stats request for each character in the profile and merge the results into a single resolved Promise
      */
