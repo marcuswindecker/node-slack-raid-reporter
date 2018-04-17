@@ -83,6 +83,10 @@ var Responses = function () {
         attachments: [{
           fallback: _util2.default.format('%s has %d completions in total on %s.', stats.username, stats.completions, stats.platform),
           fields: [{
+            title: 'Raid.Report',
+            value: _util2.default.format('https://raid.report/ps/%s', stats.username),
+            short: true
+          }, {
             title: 'Total Completions',
             value: stats.completions,
             short: true
