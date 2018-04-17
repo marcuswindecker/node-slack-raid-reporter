@@ -1,0 +1,61 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "mocha": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": ["error", 2, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single", {"avoidEscape": true}],
+        "semi": ["error", "never"],
+        "comma-spacing": ["error"],
+        "camelcase": ["error"],
+        "eqeqeq": ["error"],
+        "space-before-blocks": ["error"],
+        "space-in-parens": ["error"],
+        "space-unary-ops": ["error"],
+        "no-multi-spaces": ["error"],
+        "keyword-spacing": ["error"],
+        "arrow-spacing": ["error"],
+        "spaced-comment": ["error"],
+        "line-comment-position": ["error", {"position": "above"}],
+        "require-jsdoc": ["error", {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true
+            }
+        }],
+        "space-before-function-paren": ["error", "never"],
+        "curly": ["error"],
+        "object-curly-spacing": ["error", "always"],
+        "key-spacing": ["error"],
+        "complexity": ["error", 16],
+        "no-const-assign": ["error"],
+        "prefer-const": ["error"],
+        "no-implicit-globals": ["error"],
+        "no-confusing-arrow": ["error"],
+        "no-class-assign": ["error"],
+        "no-duplicate-imports": ["error"],
+        "no-dupe-class-members": ["error"],
+        "arrow-parens": ["error", "always"],
+        "no-lonely-if": ["error"],
+        "no-console": ["error"],
+        "no-alert": ["error"],
+        "no-debugger": ["error"],
+        "no-var": ["error"],
+        "no-unneeded-ternary": ["error"],
+        "no-nested-ternary": ["error"],
+        "no-underscore-dangle": ["error"],
+        "no-cond-assign": ["error"],
+        "no-extra-parens": ["error", "all", { "nestedBinaryExpressions": false }],
+        "no-trailing-spaces": ["error"],
+        "no-multiple-empty-lines": ["error", {"max": 1}],
+        "no-else-return": ["error"]
+    }
+}

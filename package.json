@@ -6,7 +6,8 @@
   "scripts": {
     "build": "babel ./src --experimental --source-maps-inline -d ./dist && npm run serve",
     "serve": "node index.js",
-    "start": "nodemon --exec npm run build --ignore './dist/'"
+    "start": "nodemon --exec npm run build --ignore './dist/'",
+    "lint": "node_modules/.bin/eslint src/**"
   },
   "author": "Marcus Windecker (https://github.com/marcuswindecker)",
   "license": "MIT",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.1",
     "nodemon": "^1.17.1"
   }
 }
