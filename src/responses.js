@@ -58,6 +58,11 @@ class Responses {
         fallback: util.format('%s has %d completions in total on %s.', stats.username, stats.completions, stats.platform),
         fields: [
           {
+            title: 'Raid.Report',
+            value: util.format('https://raid.report/ps/%s', stats.username),
+            short: true
+          },
+          {
             title: 'Total Completions',
             value: stats.completions,
             short: true
